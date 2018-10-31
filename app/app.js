@@ -10,7 +10,17 @@ let paddleX = 400;
 
 const CELL_W = 100;
 const CELL_H = 100;
-const CELL_COUNT = 16;
+const CELL_ROWS = 4;
+const CELL_COLS = 4;
+const CELL_GAP = 2
+
+let emptyPosArr = new Array(4);
+    for (let index = 0; index < emptyPosArr.length; index++) {
+        emptyPosArr[index] = new Array(true, true, true, true);
+    }
+console.log(emptyPosArr);
+emptyPosArr[1][1] = false;
+console.log (emptyPosArr);
 
 let canvas, canvasContext;
 
@@ -23,7 +33,7 @@ function updateMousePos(evt) {
     paddleX = mouseX;
 }
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('Yo!!');
+    console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
     canvasContext = canvas.getContext('2d');
  
@@ -73,25 +83,21 @@ function moveAll() {
         }
 }
 
-let brickGrid = [true, true, true, true];
-
-
 function drawCells() {
-    // colorRect(0,0, CELL_W-2, CELL_H-2, 'yellow');
-    // colorRect(CELL_W, 0, CELL_W-2, CELL_H-2, 'yellow');
-    // colorRect(2 * CELL_W, 0, CELL_W-2, CELL_H-2, 'yellow');
-    // colorRect(3 * CELL_W, 0, CELL_W-2, CELL_H-2, 'yellow');
-
-    for (let i = 0; i < CELL_COUNT; i++) {
-        colorRect(CELL_W * (i % 4) + 2, CELL_H * (Math.floor(i / 4)) + 2, CELL_W - 2, CELL_H - 2, 'yellow');
-
+    for (let eachRow = 0; eachRow < CELL_ROWS; eachRow++) {
+        for (let eachCol = 0; eachCol < CELL_COLS; eachCol++) {
+            if (emptyPosArr[eachRow][eachCol]) {
+                colorRect(CELL_W * eachRow + CELL_GAP, CELL_H * eachCol + CELL_GAP, CELL_W - CELL_GAP, CELL_H - CELL_GAP, "yellow");
+            } else {
+                colorRect(CELL_W * eachRow + CELL_GAP, CELL_H * eachCol + CELL_GAP, CELL_W - CELL_GAP, CELL_H - CELL_GAP, "red");
+            }
+        }    
     }
-
 }
 
 function drawAll() {
     colorRect(0,0, canvas.width,canvas.height, 'black');
-    colorCircle(ballX, ballY, 10, 'green');
+    colorCircle(ballX, ballY, 10, 'blue');
     colorRect(paddleX, canvas.height - PADDLE_DIST_FROM_EDGE,
             PADDLE_WIDTH, PADDLE_THICKNESS, 'red');
     drawCells();

@@ -12,7 +12,10 @@ class Board {
     }
 
     blankGrid() {
-         return new Array(4).fill(new Array(4).fill(null)); //creates a blank 4 by 4 grid)
+        let blankArr = new Array(4);
+        for (let index = 0; index < emptyPosArr.length; index++) {
+            blankArr[index] = new Array(Tile.new(null, yellow), Tile.new(null, yellow), Tile.new(null, yellow), Tile.new(null, yellow);
+        }
     }
 
     checkBoard() {
@@ -25,7 +28,7 @@ class Board {
         while (this.grid(pos)) {
             pos = this.generateRandomPos();
         }
-        let newTile = new Tile(grid, val, pos);
+        let newTile = new Tile(val);
         this.setPos(this.grid, pos, newTile);
     }
 
@@ -33,9 +36,9 @@ class Board {
         return [Math.random(4), Math.random(4)];
     }
 
-    getPos(pos) {
+    getPos(grid, pos) {
         const [row, col] = pos;
-        return grid[row][col];
+        grid[row][col];
     }
     
     setPos(grid, pos, tile) {
