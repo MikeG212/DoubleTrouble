@@ -90,18 +90,14 @@
 /*!********************!*\
   !*** ./app/app.js ***!
   \********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-let ballX = 75;
-let ballSpeedX = 5;
-let ballY = 75;
-let ballSpeedY = 5;
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./board */ "./app/board.js");
+/* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_board__WEBPACK_IMPORTED_MODULE_0__);
 
-const PADDLE_WIDTH = 100;
-const PADDLE_THICKNESS = 10;
-const PADDLE_DIST_FROM_EDGE = 60;
-let paddleX = 400;
 
 const CELL_W = 100;
 const CELL_H = 100;
@@ -109,24 +105,12 @@ const CELL_ROWS = 4;
 const CELL_COLS = 4;
 const CELL_GAP = 2
 
-let emptyPosArr = new Array(4);
-    for (let index = 0; index < emptyPosArr.length; index++) {
-        emptyPosArr[index] = new Array(true, true, true, true);
-    }
-console.log(emptyPosArr);
-emptyPosArr[1][1] = false;
-console.log (emptyPosArr);
+let board = new _board__WEBPACK_IMPORTED_MODULE_0___default.a();
+console.log("board", board);
+let grid = board.grid;
 
 let canvas, canvasContext;
 
-function updateMousePos(evt) {
-    let rect = canvas.getBoundingClientRect();
-    let root = document.documentElement;
-
-    let mouseX = evt.clientX - rect.left - root.scrollLeft;
-
-    paddleX = mouseX;
-}
 window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
@@ -135,7 +119,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let framesPerSecond = 30;
     setInterval(updateAll, 1000/framesPerSecond);
 
-    canvas.addEventListener('mousemove', updateMousePos)
+    // canvas.addEventListener('mousemove', updateMousePos)
 })
 
 function updateAll() {
@@ -143,74 +127,138 @@ function updateAll() {
     drawAll();
 }
 
-function ballReset() {
-    ballX = canvas.width/2;
-    ballY = canvas.height/2;
-    colorCircle()
-}
-
 function moveAll() {
-
-    ballX += ballSpeedX;
-    ballY += ballSpeedY;
-    
-    if (ballX > canvas.width || ballX < 0) {
-        ballSpeedX *= -1;
-    }
-
-    if (ballY < 0) {
-        ballSpeedY *= -1;
-    }
-
-    if (ballY > canvas.height) {
-        ballReset();
-    }
-
-    let paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
-    let paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
-    let paddleLeftEdgeX = paddleX;
-    let paddleRightEdgeX = paddleLeftEdgeX + PADDLE_WIDTH;
-    if  (ballY > paddleTopEdgeY &&
-        ballY < paddleBottomEdgeY &&
-        ballX > paddleLeftEdgeX &&
-        ballX < paddleRightEdgeX) {
-          ballSpeedY *= -1;  
-        }
+    console.log("I like to move it, move it");
 }
 
 function drawCells() {
     for (let eachRow = 0; eachRow < CELL_ROWS; eachRow++) {
         for (let eachCol = 0; eachCol < CELL_COLS; eachCol++) {
-            if (emptyPosArr[eachRow][eachCol]) {
-                colorRect(CELL_W * eachRow + CELL_GAP, CELL_H * eachCol + CELL_GAP, CELL_W - CELL_GAP, CELL_H - CELL_GAP, "yellow");
-            } else {
-                colorRect(CELL_W * eachRow + CELL_GAP, CELL_H * eachCol + CELL_GAP, CELL_W - CELL_GAP, CELL_H - CELL_GAP, "red");
-            }
-        }    
-    }
+            let tile = grid[eachRow][eachCol];
+            colorRect(CELL_W * eachRow + CELL_GAP,
+                      CELL_H * eachCol + CELL_GAP,
+                      CELL_W - CELL_GAP,
+                      CELL_H - CELL_GAP,
+                      tile.color,
+                      tile.value
+                    );
+        }
+    }    
 }
+
 
 function drawAll() {
     colorRect(0,0, canvas.width,canvas.height, 'black');
-    colorCircle(ballX, ballY, 10, 'blue');
-    colorRect(paddleX, canvas.height - PADDLE_DIST_FROM_EDGE,
-            PADDLE_WIDTH, PADDLE_THICKNESS, 'red');
     drawCells();
 }
 
-function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
+function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, value) {
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
 }
 
-function colorCircle(centerX, centerY, radius, fillColor) {
-    canvasContext.fillStyle = fillColor;
-    canvasContext.beginPath();
-    canvasContext.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
-    canvasContext.fill();
+
+
+/***/ }),
+
+/***/ "./app/board.js":
+/*!**********************!*\
+  !*** ./app/board.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
+
+class Board {
+    constructor() {
+        this.grid = this.blankGrid();
+        console.log(this.grid);
+        this.emptyPos = [[0, 0], [0, 1], [0, 2], [0, 3], //stores empty squares when tiles are moved and placed we alter this
+                         [1, 0], [1, 1], [1, 2], [1, 3],
+                         [2, 0], [2, 1], [2, 2], [2, 3],
+                         [3, 0], [3, 1], [3, 2], [3, 3]];
+        this.createRandomTile(this.grid);
+        this.createRandomTile(this.grid);
+    }
+
+    blankGrid() {
+        let blankArr = new Array(4);
+        for (let index = 0; index < blankArr.length; index++) {
+            blankArr[index] = new Array(new Tile(null), new Tile(null), new Tile(null), new Tile(null));
+        }
+        return blankArr;
+    }
+
+    checkBoard() {
+        console.log(this.grid);
+    }
+
+    createRandomTile(grid) {
+        let val;
+        if (Math.random() < .5) {
+            val = 2;
+        } else {
+            val = 4;
+        }
+        console.log(val);
+        let pos = this.generateRandomPos();
+        console.log(pos);
+        let newTile = new Tile(val);
+        console.log("call Set pos")
+        console.log(newTile);
+        console.log(grid)
+
+        this.setPos(grid, pos, newTile);
+    }
+
+    generateRandomPos() {
+        return [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)];
+    }
+
+    getPos(grid, pos) {
+        const [row, col] = pos;
+        grid[row][col];
+    }
+    
+    setPos(grid, pos, tile) {
+        console.log("entering set pos");
+        console.log(pos);
+        console.log(grid);
+        console.log(tile);
+        const [row, col] = pos;
+        grid[row][col] = tile;
+    }
 }
 
+module.exports = Board;
 
+
+
+/***/ }),
+
+/***/ "./app/tile.js":
+/*!*********************!*\
+  !*** ./app/tile.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const TILE_COLORS = {
+    null: 'yellow',
+    2: 'red',
+    4: 'green'
+}
+
+class Tile {
+
+
+    constructor(val = null) {
+        this.val = val
+        this.color = TILE_COLORS[val];
+    }
+}
+module.exports = Tile;
 
 /***/ })
 

@@ -2,7 +2,8 @@ const Tile = require("./tile");
 
 class Board {
     constructor() {
-        this.grid = this.blankGrid;
+        this.grid = this.blankGrid();
+        console.log(this.grid);
         this.emptyPos = [[0, 0], [0, 1], [0, 2], [0, 3], //stores empty squares when tiles are moved and placed we alter this
                          [1, 0], [1, 1], [1, 2], [1, 3],
                          [2, 0], [2, 1], [2, 2], [2, 3],
@@ -13,9 +14,10 @@ class Board {
 
     blankGrid() {
         let blankArr = new Array(4);
-        for (let index = 0; index < emptyPosArr.length; index++) {
-            blankArr[index] = new Array(Tile.new(null, yellow), Tile.new(null, yellow), Tile.new(null, yellow), Tile.new(null, yellow);
+        for (let index = 0; index < blankArr.length; index++) {
+            blankArr[index] = new Array(new Tile(null), new Tile(null), new Tile(null), new Tile(null));
         }
+        return blankArr;
     }
 
     checkBoard() {
@@ -23,17 +25,25 @@ class Board {
     }
 
     createRandomTile(grid) {
-        let val = Math.floor(Math.random(2) * 2);
-        let pos = null;
-        while (this.grid(pos)) {
-            pos = this.generateRandomPos();
+        let val;
+        if (Math.random() < .5) {
+            val = 2;
+        } else {
+            val = 4;
         }
+        console.log(val);
+        let pos = this.generateRandomPos();
+        console.log(pos);
         let newTile = new Tile(val);
-        this.setPos(this.grid, pos, newTile);
+        console.log("call Set pos")
+        console.log(newTile);
+        console.log(grid)
+
+        this.setPos(grid, pos, newTile);
     }
 
     generateRandomPos() {
-        return [Math.random(4), Math.random(4)];
+        return [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)];
     }
 
     getPos(grid, pos) {
@@ -42,6 +52,10 @@ class Board {
     }
     
     setPos(grid, pos, tile) {
+        console.log("entering set pos");
+        console.log(pos);
+        console.log(grid);
+        console.log(tile);
         const [row, col] = pos;
         grid[row][col] = tile;
     }
