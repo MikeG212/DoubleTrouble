@@ -1,15 +1,21 @@
-function Game() {
-    new Game
-    generates a new grid
-    populates grid with 2 new random tiles
-    this.gameOver = false;
-    end
+const Board = require("./board");
+
+class Game{
+    constructor() {
+        this.grid = new Board();
+        this.gameOver = false;
+
+    }
 
     gameOverCheck() {
-        if (!hasValidMoves ? && !grid.includes ? (null)) {
+        if (!hasValidMoves? && !grid.includes ? (null)) {
             this.gameOver = true;
             endGame()
         }
+    }
+
+    play() {
+        until board.over?
     }
 
     endGame() {
@@ -17,9 +23,10 @@ function Game() {
     }
 
 
-    hasValidmoves ?
+    hasValidmoves(){
         up down left right
     if grid !== grid(direction) if new grid position
+    }
 
     turn
     takes in direction
@@ -31,8 +38,4 @@ function Game() {
             until gameOver
 
     combine tiles
-
-
-
-
 }
