@@ -7,7 +7,9 @@ const CELL_COLS = 4;
 const CELL_GAP = 2
 
 let board = new Board();
+// debugger
 console.log("board", board);
+
 let grid = board.grid;
 
 let canvas, canvasContext;
@@ -16,17 +18,36 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
     canvasContext = canvas.getContext('2d');
- 
-    let framesPerSecond = 30;
-    setInterval(updateAll, 1000/framesPerSecond);
+    updateAll();
+    updateAll();
 
-    // canvas.addEventListener('mousemove', updateMousePos)
+    
+    
+    // canvas.addEventListener('arrow', updateMousePos)
 })
 
 function updateAll() {
     moveAll();
     drawAll();
+    setTimeout(board.moveUp, 10000);
 }
+
+function moveUp() {
+
+}
+
+function moveDown() {
+
+}
+
+function moveLeft() {
+
+}
+
+function moveRight() {
+
+}
+
 
 function moveAll() {
     console.log("I like to move it, move it");

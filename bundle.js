@@ -106,7 +106,9 @@ const CELL_COLS = 4;
 const CELL_GAP = 2
 
 let board = new _board__WEBPACK_IMPORTED_MODULE_0___default.a();
+// debugger
 console.log("board", board);
+
 let grid = board.grid;
 
 let canvas, canvasContext;
@@ -115,17 +117,36 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
     canvasContext = canvas.getContext('2d');
- 
-    let framesPerSecond = 30;
-    setInterval(updateAll, 1000/framesPerSecond);
+    updateAll();
+    updateAll();
 
-    // canvas.addEventListener('mousemove', updateMousePos)
+    
+    
+    // canvas.addEventListener('arrow', updateMousePos)
 })
 
 function updateAll() {
     moveAll();
     drawAll();
+    setTimeout(board.moveUp, 10000);
 }
+
+function moveUp() {
+
+}
+
+function moveDown() {
+
+}
+
+function moveLeft() {
+
+}
+
+function moveRight() {
+
+}
+
 
 function moveAll() {
     console.log("I like to move it, move it");
@@ -179,7 +200,6 @@ const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
 class Board {
     constructor() {
         this.grid = this.blankGrid();
-        console.log(this.grid);
         this.emptyPos = [[0, 0], [0, 1], [0, 2], [0, 3], //stores empty squares when tiles are moved and placed we alter this
                          [1, 0], [1, 1], [1, 2], [1, 3],
                          [2, 0], [2, 1], [2, 2], [2, 3],
@@ -196,10 +216,6 @@ class Board {
         return blankArr;
     }
 
-    checkBoard() {
-        console.log(this.grid);
-    }
-
     createRandomTile(grid) {
         let val;
         if (Math.random() < .5) {
@@ -208,7 +224,6 @@ class Board {
             val = 4;
         }
         let pos = this.generateRandomPos();
-        console.log(this.getPos(grid, pos));
         while (this.getPos(grid, pos).val)  {
             pos = this.generateRandomPos();
         }
@@ -221,15 +236,51 @@ class Board {
     }
 
     getPos(grid, pos) {
-        const [row, col] = pos;
-        return grid[row][col];
+        const [col, row] = pos;
+        return grid[col][row];
     }
     
     setPos(grid, pos, tile) {
-        const [row, col] = pos;
-        grid[row][col] = tile;
+        const [col, row] = pos;
+        grid[col][row] = tile;
+    }
+
+    // moveUp() {
+
+    // }
+
+    // moveDown() {
+
+    // }
+
+    moveUp() {
+        let col;
+        for (let i = 0;  i < this.grid.length; i++) {
+            let filteredCol = [];
+            col = this.grid[i]
+            for (let j = 0; j < col.length; j++) {
+                let el = col[j];
+                if (col[j].val) {
+                    filteredCol.push(el);
+                }
+
+            }
+            while (filteredCol.length < 4) {
+                filteredCol.push(new Tile(null));
+            }
+            this.grid[i] = filteredCol;
+        }
+        console.log(this.grid);
     }
 }
+
+    // combineNums() {
+
+    // }
+
+    // moveRight() {
+
+    // }
 
 module.exports = Board;
 
