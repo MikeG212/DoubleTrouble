@@ -3,10 +3,6 @@ const Tile = require("./tile");
 class Board {
     constructor() {
         this.grid = this.blankGrid();
-        this.emptyPos = [[0, 0], [0, 1], [0, 2], [0, 3], //stores empty squares when tiles are moved and placed we alter this
-                         [1, 0], [1, 1], [1, 2], [1, 3],
-                         [2, 0], [2, 1], [2, 2], [2, 3],
-                         [3, 0], [3, 1], [3, 2], [3, 3]];
         this.createRandomTile(this.grid);
         this.createRandomTile(this.grid);
     }
@@ -48,22 +44,6 @@ class Board {
         grid[col][row] = tile;
     }
 
-
-
-
-
-    filterNullsFromCol(col, direction) {
-        for (let j = 0; j < col.length; j++) {
-            let el = col[j];
-            if (col[j].val) {
-                filteredCol.push(el);
-            }
-
-        }
-
-        return combineTilesCol(filteredCol, direction);
-    }
-
     moveAll(direction) {
         switch (direction) {
             case "left":
@@ -93,37 +73,24 @@ class Board {
 
     }
 
-    combineTilesUp(col) {
-        for (let i = col.length - 1; i > 1; i--) {
-            el = col[i];
-            nextEl = col[i - 1];
-            if (el === nextEl) {
-                col[i] = new Tile(null)
-                col[i - 1] = new Tile(el * 2);
-                i--;
-            }
-        }
-    }
-
-
-    
-
-
-
-    moveUp(direction) {
+    moveUp() {
         let col;
-        let filteredCol;
         for (let i = 0; i < this.grid.length; i++) {
+            let filteredCol = [];
             col = this.grid[i]
-            filteredCol = filterNullsFromCol(col);
-            if (direction === 'up')
+            for (let j = 0; j < col.length; j++) {
+                let el = col[j];
+                if (col[j].val) {
+                    filteredCol.push(el);
+                }
+
+            }
             while (filteredCol.length < 4) {
-                filteredCol.unshift(new Tile(null));
+                filteredCol.push(new Tile(null));
             }
             this.grid[i] = filteredCol;
         }
-
-        return filteredCol;
+        console.log(this.grid);
     }
 
 
@@ -142,25 +109,36 @@ class Board {
         console.log(this.grid);
     }
 
+    moveLeft() {
 
-    moveUp() {
-        let col;
-        for (let i = 0;  i < this.grid.length; i++) {
-            let filteredCol = [];
-            col = this.grid[i]
-            for (let j = 0; j < col.length; j++) {
-                let el = col[j];
-                if (col[j].val) {
-                    filteredCol.push(el);
-                }
+    }
 
+    moveRight() {
+
+    }
+
+    combineTilesUp() {
+        for (let i = col.length - 1; i > 1; i--) {
+            el = col[i];
+            nextEl = col[i - 1];
+            if (el === nextEl) {
+                col[i] = new Tile(null)
+                col[i - 1] = new Tile(el * 2);
+                i--;
             }
-            while (filteredCol.length < 4) {
-                filteredCol.push(new Tile(null));
-            }
-            this.grid[i] = filteredCol;
         }
-        console.log(this.grid);
+    }
+
+    combineTilesDown() {
+
+    }
+
+    combineTilesLeft() {
+
+    }
+
+    combineTilesRight() {
+
     }
 }
 

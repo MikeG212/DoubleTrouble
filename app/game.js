@@ -2,40 +2,38 @@ const Board = require("./board");
 
 class Game{
     constructor() {
-        this.grid = new Board();
+        this.board = new Board();
         this.gameOver = false;
+        this.grid = this.board.grid;
 
     }
 
     gameOverCheck() {
-        if (!hasValidMoves? && !grid.includes ? (null)) {
-            this.gameOver = true;
-            endGame()
-        }
+        //does the player have moves that mutate the grid
     }
 
     play() {
-        until board.over?
+        while (!this.gameOver) {
+            this.turn();
+            this.board.createRandomTile(this.grid)
+            this.gameOverCheck();
+        }
+        endGame();
+    }
+
+    turn(direction) {
+        this.board.moveAll(direction)
+        this.board.createRandomTile(this.grid);
     }
 
     endGame() {
-        if gameOver
+        console.log("GAME OVER!!!");
     }
 
 
     hasValidmoves(){
-        up down left right
-    if grid !== grid(direction) if new grid position
+        //can I mutate the grid?
     }
 
-    turn
-    takes in direction
-    execute
-    generateNewTile
-    if !grid.includes ? (null)
-            gameOverCheck ?
-
-            until gameOver
-
-    combine tiles
 }
+module.exports = Game;

@@ -95,8 +95,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./board */ "./app/board.js");
-/* harmony import */ var _board__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_board__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game */ "./app/game.js");
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_game__WEBPACK_IMPORTED_MODULE_0__);
 
 
 const CELL_W = 100;
@@ -111,7 +111,8 @@ const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
-let board = new _board__WEBPACK_IMPORTED_MODULE_0___default.a();
+let game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
+let board = game.board;
 
 let grid = board.grid;
 
@@ -129,19 +130,19 @@ function keyPressed(evt) {
     console.log(evt.keyCode);
     switch(evt.keyCode) {
         case KEY_LEFT:
-            board.moveAll('left');
+            game.turn('left');
             drawAll();
             break;
         case KEY_RIGHT:
-            board.moveAll('right');
+            game.turn('right');
             drawAll();
             break;
         case KEY_UP:
-            board.moveAll('up');
+            game.turn('up');
             drawAll();
             break;
         case KEY_DOWN:
-            board.moveAll('down');
+            game.turn('down');
             drawAll();
             break;
         default:
@@ -202,10 +203,6 @@ const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
 class Board {
     constructor() {
         this.grid = this.blankGrid();
-        this.emptyPos = [[0, 0], [0, 1], [0, 2], [0, 3], //stores empty squares when tiles are moved and placed we alter this
-                         [1, 0], [1, 1], [1, 2], [1, 3],
-                         [2, 0], [2, 1], [2, 2], [2, 3],
-                         [3, 0], [3, 1], [3, 2], [3, 3]];
         this.createRandomTile(this.grid);
         this.createRandomTile(this.grid);
     }
@@ -247,22 +244,6 @@ class Board {
         grid[col][row] = tile;
     }
 
-
-
-
-
-    filterNullsFromCol(col, direction) {
-        for (let j = 0; j < col.length; j++) {
-            let el = col[j];
-            if (col[j].val) {
-                filteredCol.push(el);
-            }
-
-        }
-
-        return combineTilesCol(filteredCol, direction);
-    }
-
     moveAll(direction) {
         switch (direction) {
             case "left":
@@ -292,37 +273,24 @@ class Board {
 
     }
 
-    combineTilesUp(col) {
-        for (let i = col.length - 1; i > 1; i--) {
-            el = col[i];
-            nextEl = col[i - 1];
-            if (el === nextEl) {
-                col[i] = new Tile(null)
-                col[i - 1] = new Tile(el * 2);
-                i--;
-            }
-        }
-    }
-
-
-    
-
-
-
-    moveUp(direction) {
+    moveUp() {
         let col;
-        let filteredCol;
         for (let i = 0; i < this.grid.length; i++) {
+            let filteredCol = [];
             col = this.grid[i]
-            filteredCol = filterNullsFromCol(col);
-            if (direction === 'up')
+            for (let j = 0; j < col.length; j++) {
+                let el = col[j];
+                if (col[j].val) {
+                    filteredCol.push(el);
+                }
+
+            }
             while (filteredCol.length < 4) {
-                filteredCol.unshift(new Tile(null));
+                filteredCol.push(new Tile(null));
             }
             this.grid[i] = filteredCol;
         }
-
-        return filteredCol;
+        console.log(this.grid);
     }
 
 
@@ -341,31 +309,91 @@ class Board {
         console.log(this.grid);
     }
 
+    moveLeft() {
 
-    moveUp() {
-        let col;
-        for (let i = 0;  i < this.grid.length; i++) {
-            let filteredCol = [];
-            col = this.grid[i]
-            for (let j = 0; j < col.length; j++) {
-                let el = col[j];
-                if (col[j].val) {
-                    filteredCol.push(el);
-                }
+    }
 
+    moveRight() {
+
+    }
+
+    combineTilesUp() {
+        for (let i = col.length - 1; i > 1; i--) {
+            el = col[i];
+            nextEl = col[i - 1];
+            if (el === nextEl) {
+                col[i] = new Tile(null)
+                col[i - 1] = new Tile(el * 2);
+                i--;
             }
-            while (filteredCol.length < 4) {
-                filteredCol.push(new Tile(null));
-            }
-            this.grid[i] = filteredCol;
         }
-        console.log(this.grid);
+    }
+
+    combineTilesDown() {
+
+    }
+
+    combineTilesLeft() {
+
+    }
+
+    combineTilesRight() {
+
     }
 }
 
 module.exports = Board;
 
 
+
+/***/ }),
+
+/***/ "./app/game.js":
+/*!*********************!*\
+  !*** ./app/game.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Board = __webpack_require__(/*! ./board */ "./app/board.js");
+
+class Game{
+    constructor() {
+        this.board = new Board();
+        this.gameOver = false;
+        this.grid = this.board.grid;
+
+    }
+
+    gameOverCheck() {
+        //does the player have moves that mutate the grid
+    }
+
+    play() {
+        while (!this.gameOver) {
+            this.turn();
+            this.board.createRandomTile(this.grid)
+            this.gameOverCheck();
+        }
+        endGame();
+    }
+
+    turn(direction) {
+        this.board.moveAll(direction)
+        this.board.createRandomTile(this.grid);
+    }
+
+    endGame() {
+        console.log("GAME OVER!!!");
+    }
+
+
+    hasValidmoves(){
+        //can I mutate the grid?
+    }
+
+}
+module.exports = Game;
 
 /***/ }),
 

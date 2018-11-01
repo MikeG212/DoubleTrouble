@@ -1,4 +1,4 @@
-import Board from './board'
+import Game from './game'
 
 const CELL_W = 100;
 const CELL_H = 100;
@@ -12,7 +12,8 @@ const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
-let board = new Board();
+let game = new Game();
+let board = game.board;
 
 let grid = board.grid;
 
@@ -30,19 +31,19 @@ function keyPressed(evt) {
     console.log(evt.keyCode);
     switch(evt.keyCode) {
         case KEY_LEFT:
-            board.moveAll('left');
+            game.turn('left');
             drawAll();
             break;
         case KEY_RIGHT:
-            board.moveAll('right');
+            game.turn('right');
             drawAll();
             break;
         case KEY_UP:
-            board.moveAll('up');
+            game.turn('up');
             drawAll();
             break;
         case KEY_DOWN:
-            board.moveAll('down');
+            game.turn('down');
             drawAll();
             break;
         default:
