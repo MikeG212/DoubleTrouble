@@ -57,10 +57,10 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    canvasContext.font = '20px serif';
+    canvasContext.font = '40px serif';
     canvasContext.fillStyle = "black";
     if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + 20, topLeftY + 20);
+        canvasContext.fillText(`${val}`, topLeftX + 40, topLeftY + 60);
     }
 }
 
