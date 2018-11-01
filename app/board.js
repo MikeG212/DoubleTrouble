@@ -48,13 +48,100 @@ class Board {
         grid[col][row] = tile;
     }
 
-    // moveUp() {
 
-    // }
 
-    // moveDown() {
 
-    // }
+
+    filterNullsFromCol(col, direction) {
+        for (let j = 0; j < col.length; j++) {
+            let el = col[j];
+            if (col[j].val) {
+                filteredCol.push(el);
+            }
+
+        }
+
+        return combineTilesCol(filteredCol, direction);
+    }
+
+    moveAll(direction) {
+        switch (direction) {
+            case "left":
+                this.shiftTilesLeft;
+                this.combineTilesLeft;
+                this.shiftTilesLeft;
+                break;
+            case "right":
+                this.shiftTilesRight;
+                this.combineTilesRight;
+                this.shiftTilesRight;
+                break;
+            case "up":
+                this.shiftTilesUp;
+                this.combineTilesUp;
+                this.shiftTilesUp;
+                break;
+            case "down":
+                this.shiftTilesDown;
+                this.combineTilesDown;
+                this.shiftTilesDown;
+                break;
+            default: 
+                break;
+
+        }
+
+    }
+
+    combineTilesUp(col) {
+        for (let i = col.length - 1; i > 1; i--) {
+            el = col[i];
+            nextEl = col[i - 1];
+            if (el === nextEl) {
+                col[i] = new Tile(null)
+                col[i - 1] = new Tile(el * 2);
+                i--;
+            }
+        }
+    }
+
+
+    
+
+
+
+    moveUp(direction) {
+        let col;
+        let filteredCol;
+        for (let i = 0; i < this.grid.length; i++) {
+            col = this.grid[i]
+            filteredCol = filterNullsFromCol(col);
+            if (direction === 'up')
+            while (filteredCol.length < 4) {
+                filteredCol.unshift(new Tile(null));
+            }
+            this.grid[i] = filteredCol;
+        }
+
+        return filteredCol;
+    }
+
+
+
+    moveDown() {
+        let col;
+        let filteredCol;
+        for (let i = 0; i < this.grid.length; i++) {
+            col = this.grid[i]
+            filteredCol = filterNullsFromCol(col);
+            while (filteredCol.length < 4) {
+                filteredCol.push(new Tile(null));
+            }
+            this.grid[i] = filteredCol;
+        }
+        console.log(this.grid);
+    }
+
 
     moveUp() {
         let col;
@@ -76,14 +163,6 @@ class Board {
         console.log(this.grid);
     }
 }
-
-    // combineNums() {
-
-    // }
-
-    // moveRight() {
-
-    // }
 
 module.exports = Board;
 

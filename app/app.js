@@ -6,9 +6,13 @@ const CELL_ROWS = 4;
 const CELL_COLS = 4;
 const CELL_GAP = 2
 
+
+const KEY_LEFT = 37;
+const KEY_UP = 38;
+const KEY_RIGHT = 39;
+const KEY_DOWN = 40;
+
 let board = new Board();
-// debugger
-console.log("board", board);
 
 let grid = board.grid;
 
@@ -18,39 +22,33 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
     canvasContext = canvas.getContext('2d');
-    updateAll();
-    updateAll();
-
-    
-    
-    // canvas.addEventListener('arrow', updateMousePos)
+    drawAll();
+    document.addEventListener('keydown', keyPressed)
 })
 
-function updateAll() {
-    moveAll();
-    drawAll();
-    setTimeout(board.moveUp, 10000);
-}
-
-function moveUp() {
-
-}
-
-function moveDown() {
-
-}
-
-function moveLeft() {
-
-}
-
-function moveRight() {
-
-}
-
-
-function moveAll() {
-    console.log("I like to move it, move it");
+function keyPressed(evt) {
+    console.log(evt.keyCode);
+    switch(evt.keyCode) {
+        case KEY_LEFT:
+            board.moveAll('left');
+            drawAll();
+            break;
+        case KEY_RIGHT:
+            board.moveAll('right');
+            drawAll();
+            break;
+        case KEY_UP:
+            board.moveAll('up');
+            drawAll();
+            break;
+        case KEY_DOWN:
+            board.moveAll('down');
+            drawAll();
+            break;
+        default:
+            break;
+    }
+    evt.preventDefault();
 }
 
 function drawCells() {
@@ -70,8 +68,12 @@ function drawCells() {
 
 
 function drawAll() {
-    colorRect(0,0, canvas.width,canvas.height, 'black');
+    drawCanvas();
     drawCells();
+}
+
+function drawCanvas() {
+    colorRect(0, 0, canvas.width, canvas.height, 'black');
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {

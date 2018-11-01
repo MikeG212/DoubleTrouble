@@ -105,9 +105,13 @@ const CELL_ROWS = 4;
 const CELL_COLS = 4;
 const CELL_GAP = 2
 
+
+const KEY_LEFT = 37;
+const KEY_UP = 38;
+const KEY_RIGHT = 39;
+const KEY_DOWN = 40;
+
 let board = new _board__WEBPACK_IMPORTED_MODULE_0___default.a();
-// debugger
-console.log("board", board);
 
 let grid = board.grid;
 
@@ -117,39 +121,33 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
     canvas = document.getElementById('doubleTroubleCanvas');
     canvasContext = canvas.getContext('2d');
-    updateAll();
-    updateAll();
-
-    
-    
-    // canvas.addEventListener('arrow', updateMousePos)
+    drawAll();
+    document.addEventListener('keydown', keyPressed)
 })
 
-function updateAll() {
-    moveAll();
-    drawAll();
-    setTimeout(board.moveUp, 10000);
-}
-
-function moveUp() {
-
-}
-
-function moveDown() {
-
-}
-
-function moveLeft() {
-
-}
-
-function moveRight() {
-
-}
-
-
-function moveAll() {
-    console.log("I like to move it, move it");
+function keyPressed(evt) {
+    console.log(evt.keyCode);
+    switch(evt.keyCode) {
+        case KEY_LEFT:
+            board.moveAll('left');
+            drawAll();
+            break;
+        case KEY_RIGHT:
+            board.moveAll('right');
+            drawAll();
+            break;
+        case KEY_UP:
+            board.moveAll('up');
+            drawAll();
+            break;
+        case KEY_DOWN:
+            board.moveAll('down');
+            drawAll();
+            break;
+        default:
+            break;
+    }
+    evt.preventDefault();
 }
 
 function drawCells() {
@@ -169,8 +167,12 @@ function drawCells() {
 
 
 function drawAll() {
-    colorRect(0,0, canvas.width,canvas.height, 'black');
+    drawCanvas();
     drawCells();
+}
+
+function drawCanvas() {
+    colorRect(0, 0, canvas.width, canvas.height, 'black');
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
@@ -245,13 +247,100 @@ class Board {
         grid[col][row] = tile;
     }
 
-    // moveUp() {
 
-    // }
 
-    // moveDown() {
 
-    // }
+
+    filterNullsFromCol(col, direction) {
+        for (let j = 0; j < col.length; j++) {
+            let el = col[j];
+            if (col[j].val) {
+                filteredCol.push(el);
+            }
+
+        }
+
+        return combineTilesCol(filteredCol, direction);
+    }
+
+    moveAll(direction) {
+        switch (direction) {
+            case "left":
+                this.shiftTilesLeft;
+                this.combineTilesLeft;
+                this.shiftTilesLeft;
+                break;
+            case "right":
+                this.shiftTilesRight;
+                this.combineTilesRight;
+                this.shiftTilesRight;
+                break;
+            case "up":
+                this.shiftTilesUp;
+                this.combineTilesUp;
+                this.shiftTilesUp;
+                break;
+            case "down":
+                this.shiftTilesDown;
+                this.combineTilesDown;
+                this.shiftTilesDown;
+                break;
+            default: 
+                break;
+
+        }
+
+    }
+
+    combineTilesUp(col) {
+        for (let i = col.length - 1; i > 1; i--) {
+            el = col[i];
+            nextEl = col[i - 1];
+            if (el === nextEl) {
+                col[i] = new Tile(null)
+                col[i - 1] = new Tile(el * 2);
+                i--;
+            }
+        }
+    }
+
+
+    
+
+
+
+    moveUp(direction) {
+        let col;
+        let filteredCol;
+        for (let i = 0; i < this.grid.length; i++) {
+            col = this.grid[i]
+            filteredCol = filterNullsFromCol(col);
+            if (direction === 'up')
+            while (filteredCol.length < 4) {
+                filteredCol.unshift(new Tile(null));
+            }
+            this.grid[i] = filteredCol;
+        }
+
+        return filteredCol;
+    }
+
+
+
+    moveDown() {
+        let col;
+        let filteredCol;
+        for (let i = 0; i < this.grid.length; i++) {
+            col = this.grid[i]
+            filteredCol = filterNullsFromCol(col);
+            while (filteredCol.length < 4) {
+                filteredCol.push(new Tile(null));
+            }
+            this.grid[i] = filteredCol;
+        }
+        console.log(this.grid);
+    }
+
 
     moveUp() {
         let col;
@@ -273,14 +362,6 @@ class Board {
         console.log(this.grid);
     }
 }
-
-    // combineNums() {
-
-    // }
-
-    // moveRight() {
-
-    // }
 
 module.exports = Board;
 
