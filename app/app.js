@@ -41,7 +41,7 @@ function drawCells() {
                       CELL_W - CELL_GAP,
                       CELL_H - CELL_GAP,
                       tile.color,
-                      tile.value
+                      tile.val
                     );
         }
     }    
@@ -53,8 +53,14 @@ function drawAll() {
     drawCells();
 }
 
-function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, value) {
+function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
+    
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+    canvasContext.font = '20px serif';
+    canvasContext.fillStyle = "black";
+    if (val) {
+        canvasContext.fillText(`${val}`, topLeftX + 20, topLeftY + 20);
+    }
 }
 

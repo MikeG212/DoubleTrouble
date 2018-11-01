@@ -31,14 +31,12 @@ class Board {
         } else {
             val = 4;
         }
-        console.log(val);
         let pos = this.generateRandomPos();
-        console.log(pos);
+        console.log(this.getPos(grid, pos));
+        while (this.getPos(grid, pos).val)  {
+            pos = this.generateRandomPos();
+        }
         let newTile = new Tile(val);
-        console.log("call Set pos")
-        console.log(newTile);
-        console.log(grid)
-
         this.setPos(grid, pos, newTile);
     }
 
@@ -48,14 +46,10 @@ class Board {
 
     getPos(grid, pos) {
         const [row, col] = pos;
-        grid[row][col];
+        return grid[row][col];
     }
     
     setPos(grid, pos, tile) {
-        console.log("entering set pos");
-        console.log(pos);
-        console.log(grid);
-        console.log(tile);
         const [row, col] = pos;
         grid[row][col] = tile;
     }
