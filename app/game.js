@@ -4,26 +4,32 @@ class Game{
     constructor() {
         this.board = new Board();
         this.gameOver = false;
-        this.grid = this.board.grid;
-
     }
 
-    gameOverCheck() {
-        //does the player have moves that mutate the grid
-    }
-
-    play() {
-        while (!this.gameOver) {
-            this.turn();
-            this.board.createRandomTile(this.grid)
-            this.gameOverCheck();
+    gameOverCheck() { 
+        if (this.board.grid.flat().filter(el => el.value).length == 16) {
+            this.gameOver = true;
         }
-        endGame();
+        console.log("CHECK", this.gameOver);
     }
+
+    // play(direction) {
+    //     while (!this.gameOver) {
+    //         debugger
+    //         console.log("LET'S PLAY");
+    //         this.turn(direction);
+    //         this.board.createRandomTile(this.grid)
+    //         this.gameOverCheck();
+    //     }
+    //     endGame();
+    // }
 
     turn(direction) {
+        this.gameOverCheck();
+        console.log("turnUP!")
         this.board.moveAll(direction)
-        this.board.createRandomTile(this.grid);
+        // debugger
+        this.board.createRandomTile(this.board.grid);
     }
 
     endGame() {

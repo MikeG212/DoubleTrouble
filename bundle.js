@@ -113,9 +113,6 @@ const KEY_DOWN = 40;
 
 let game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
 let board = game.board;
-
-let grid = board.grid;
-
 let canvas, canvasContext;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -131,6 +128,7 @@ function keyPressed(evt) {
     switch(evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
+            console.log("ready to draw!");
             drawAll();
             break;
         case KEY_RIGHT:
@@ -138,6 +136,7 @@ function keyPressed(evt) {
             drawAll();
             break;
         case KEY_UP:
+            console.log("go up!")
             game.turn('up');
             drawAll();
             break;
@@ -151,10 +150,11 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
+
 function drawCells() {
     for (let eachRow = 0; eachRow < CELL_ROWS; eachRow++) {
         for (let eachCol = 0; eachCol < CELL_COLS; eachCol++) {
-            let tile = grid[eachRow][eachCol];
+            let tile = board.grid[eachRow][eachCol];
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
                       CELL_W - CELL_GAP,
@@ -168,6 +168,8 @@ function drawCells() {
 
 
 function drawAll() {
+    console.log(board.grid)
+    // debugger
     drawCanvas();
     drawCells();
 }
@@ -247,24 +249,24 @@ class Board {
     moveAll(direction) {
         switch (direction) {
             case "left":
-                this.shiftTilesLeft;
-                this.combineTilesLeft;
-                this.shiftTilesLeft;
+                this.shiftTilesHorizontal("left");
+                // this.combineTilesHorizontal("left");
+                // this.shiftTilesHorizontal("left");
                 break;
             case "right":
-                this.shiftTilesRight;
-                this.combineTilesRight;
-                this.shiftTilesRight;
+                this.shiftTilesHorizontal("right");
+                // this.combineTilesHorizontal("right");
+                // this.shiftTilesHorizontal("right");
                 break;
             case "up":
-                this.shiftTilesUp;
-                this.combineTilesUp;
-                this.shiftTilesUp;
+                this.shiftTilesVertical("up");
+                // this.combineTilesVertical();
+                // this.shiftTilesVertical("up");
                 break;
             case "down":
-                this.shiftTilesDown;
-                this.combineTilesDown;
-                this.shiftTilesDown;
+                this.shiftTilesVertical("down");
+                // this.combineTilesVertical();
+                // this.shiftTilesVertical("down");
                 break;
             default: 
                 break;
@@ -273,7 +275,7 @@ class Board {
 
     }
 
-    moveUp() {
+    shiftTilesVertical(direction) {
         let col;
         for (let i = 0; i < this.grid.length; i++) {
             let filteredCol = [];
@@ -285,37 +287,72 @@ class Board {
                 }
 
             }
-            while (filteredCol.length < 4) {
-                filteredCol.push(new Tile(null));
+            if (direction == "up") {
+                while (filteredCol.length < 4) {
+                    filteredCol.push(new Tile(null));
+                }
+            }   else if (direction == "down") {
+                while (filteredCol.length < 4) {
+                    filteredCol.unshift(new Tile(null));
+                }
             }
             this.grid[i] = filteredCol;
         }
+        
         console.log(this.grid);
     }
 
-
-
-    moveDown() {
+    shiftTilesHorizontal(direction) {
+        let transposedGrid = this.transpose(this.grid);
+        // debugger
         let col;
-        let filteredCol;
-        for (let i = 0; i < this.grid.length; i++) {
-            col = this.grid[i]
-            filteredCol = filterNullsFromCol(col);
-            while (filteredCol.length < 4) {
-                filteredCol.push(new Tile(null));
+        for (let i = 0; i < transposedGrid.length; i++) {
+            // debugger
+            let filteredCol = [];
+            col = transposedGrid[i]
+            for (let j = 0; j < col.length; j++) {
+                let el = col[j];
+                if (col[j].val) {
+                    filteredCol.push(el);
+                }
+
             }
-            this.grid[i] = filteredCol;
+            if (direction == "right") {
+                while (filteredCol.length < 4) {
+                    filteredCol.unshift(new Tile(null));
+                }
+            } else if (direction == "left") {
+                // debugger
+                while (filteredCol.length < 4) {
+                    filteredCol.push(new Tile(null));
+                }
+            }
+            transposedGrid[i] = filteredCol;
         }
-        console.log(this.grid);
+
+        console.log("transposedGrid", transposedGrid);
+        console.log("doubleTransposed", this.transpose(transposedGrid));
+        // debugger;
+        this.grid = this.transpose(transposedGrid);
+        console.log("grid", this.grid);
     }
 
-    moveLeft() {
-
+    transpose(arr) {
+        return arr[0].map((col, i) => arr.map(row => row[i]));
     }
 
-    moveRight() {
-
-    }
+    // shiftTilesLeft() {
+    //     let row;
+    //     for (let i = 0; i < this.grid.length; i++) {
+    //         col = this.grid[i];
+    //         for (let j = 0; j < col.length; j++) {
+    //             el = col[j];
+                
+    //         }
+            
+    //     }
+    //     for 
+    // }
 
     combineTilesUp() {
         for (let i = col.length - 1; i > 1; i--) {
@@ -361,26 +398,32 @@ class Game{
     constructor() {
         this.board = new Board();
         this.gameOver = false;
-        this.grid = this.board.grid;
-
     }
 
-    gameOverCheck() {
-        //does the player have moves that mutate the grid
-    }
-
-    play() {
-        while (!this.gameOver) {
-            this.turn();
-            this.board.createRandomTile(this.grid)
-            this.gameOverCheck();
+    gameOverCheck() { 
+        if (this.board.grid.flat().filter(el => el.value).length == 16) {
+            this.gameOver = true;
         }
-        endGame();
+        console.log("CHECK", this.gameOver);
     }
+
+    // play(direction) {
+    //     while (!this.gameOver) {
+    //         debugger
+    //         console.log("LET'S PLAY");
+    //         this.turn(direction);
+    //         this.board.createRandomTile(this.grid)
+    //         this.gameOverCheck();
+    //     }
+    //     endGame();
+    // }
 
     turn(direction) {
+        this.gameOverCheck();
+        console.log("turnUP!")
         this.board.moveAll(direction)
-        this.board.createRandomTile(this.grid);
+        // debugger
+        this.board.createRandomTile(this.board.grid);
     }
 
     endGame() {

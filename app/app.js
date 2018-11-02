@@ -14,9 +14,6 @@ const KEY_DOWN = 40;
 
 let game = new Game();
 let board = game.board;
-
-let grid = board.grid;
-
 let canvas, canvasContext;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -32,6 +29,7 @@ function keyPressed(evt) {
     switch(evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
+            console.log("ready to draw!");
             drawAll();
             break;
         case KEY_RIGHT:
@@ -39,6 +37,7 @@ function keyPressed(evt) {
             drawAll();
             break;
         case KEY_UP:
+            console.log("go up!")
             game.turn('up');
             drawAll();
             break;
@@ -52,10 +51,11 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
+
 function drawCells() {
     for (let eachRow = 0; eachRow < CELL_ROWS; eachRow++) {
         for (let eachCol = 0; eachCol < CELL_COLS; eachCol++) {
-            let tile = grid[eachRow][eachCol];
+            let tile = board.grid[eachRow][eachCol];
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
                       CELL_W - CELL_GAP,
@@ -69,6 +69,8 @@ function drawCells() {
 
 
 function drawAll() {
+    console.log(board.grid)
+    // debugger
     drawCanvas();
     drawCells();
 }
