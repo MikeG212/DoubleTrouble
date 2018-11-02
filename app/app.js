@@ -6,15 +6,16 @@ const CELL_ROWS = 4;
 const CELL_COLS = 4;
 const CELL_GAP = 2
 
-
 const KEY_LEFT = 37;
 const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
 let game = new Game();
+// game.start();
 let board = game.board;
 let canvas, canvasContext;
+
 
 window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
@@ -26,28 +27,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function keyPressed(evt) {
     console.log(evt.keyCode);
-    switch(evt.keyCode) {
+    debugger;
+    switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
-            console.log("ready to draw!");
-            drawAll();
             break;
         case KEY_RIGHT:
             game.turn('right');
-            drawAll();
             break;
         case KEY_UP:
-            console.log("go up!")
             game.turn('up');
-            drawAll();
             break;
         case KEY_DOWN:
             game.turn('down');
-            drawAll();
             break;
         default:
             break;
     }
+
+    // if (!board.gameOver) { 
+    drawAll();
+
+
+    // }
     evt.preventDefault();
 }
 
