@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 function keyPressed(evt) {
-    console.log(evt.keyCode);
+    // console.log(evt.keyCode);
     // debugger;
     switch (evt.keyCode) {
         case KEY_LEFT:
@@ -45,11 +45,7 @@ function keyPressed(evt) {
             break;
     }
 
-    // if (!board.gameOver) { 
     drawAll();
-
-
-    // }
     evt.preventDefault();
 }
 
@@ -71,7 +67,7 @@ function drawCells() {
 
 
 function drawAll() {
-    console.log(board.grid)
+    // console.log(board.grid)
     // debugger
     drawCanvas();
     drawCells();
