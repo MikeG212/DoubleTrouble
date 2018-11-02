@@ -12,7 +12,6 @@ const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
 let game = new Game();
-// game.start();
 let board = game.board;
 let canvas, canvasContext;
 
