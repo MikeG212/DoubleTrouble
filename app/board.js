@@ -90,6 +90,27 @@ class Board {
     }
 
     moveRight() {
+        for (let j = 0; j < this.grid.length; j++) {
+            for (let i = this.grid.length - 1; i >= 0; i--) {
+                if (this.grid[i][j].val) {
+                    let row = i;
+                    while (row < 3) {
+                        if (!this.grid[row + 1][j].val) {
+                            this.grid[row + 1][j] = this.grid[row][j]
+                            this.grid[row][j] = new Tile(null)
+                            row++;
+                        } else if (this.grid[row + 1][j].val == this.grid[row][j].val) {
+                            this.grid[row + 1][j] = new Tile(this.grid[row][j].val * 2);
+                            // score increment
+                            this.grid[row][j] = new Tile(null);
+                            break;
+                        } else break;
+                    }
+                }
+
+            }
+
+        }
     }
 
     moveLeft() {
