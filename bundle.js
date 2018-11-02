@@ -126,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function keyPressed(evt) {
     console.log(evt.keyCode);
-    debugger;
+    // debugger;
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
@@ -234,7 +234,7 @@ class Board {
     }
 
     createRandomTile() {
-        debugger
+        // debugger
         let allEmptyPos = this.getAllEmptyPos();
         if (allEmptyPos.length === 0) {
             this.gameOver = true;
@@ -269,7 +269,7 @@ class Board {
     }
 
     moveAll(direction) {
-        debugger
+        // debugger
         switch (direction) {
             case "left":
                 this.moveLeft();
@@ -289,7 +289,51 @@ class Board {
         this.createRandomTile();
     }
 
-    moveLeft() {
+    moveUp() {
+        for (let j = 0; j < this.grid.length; j++) {
+            for (let i = 1; i < this.grid.length; i++) {
+                if (this.grid[j][i].val) {
+                    let col = i;
+                    while (col > 0) {
+                        if (!this.grid[j][col - 1].val) {
+                            this.grid[j][col - 1] = this.grid[j][col]
+                            this.grid[j][col] = new Tile(null)
+                            col--;
+                        } else if (this.grid[j][col - 1].val == this.grid[j][col].val) {
+                            this.grid[j][col - 1] = new Tile(this.grid[j][col].val * 2);
+                            // score increment
+                            this.grid[j][col] = new Tile(null);
+                            break;
+                        } else break;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    moveDown() {
+        for (let j = 0; j < this.grid.length; j++) {
+            for (let i = this.grid.length - 1; i >= 0; i--) {
+                if (this.grid[j][i].val) {
+                    let col = i;
+                    while (col < 3) {
+                        if (!this.grid[j][col + 1].val) {
+                            this.grid[j][col + 1] = this.grid[j][col];
+                            this.grid[j][col] = new Tile(null);
+                            col++;
+                        } else if (this.grid[j][col + 1].val == this.grid[j][col].val) {
+                            this.grid[j][col + 1] = new Tile(this.grid[j][col].val * 2);
+                            // score increment
+                            this.grid[j][col] = new Tile(null);
+                            break;
+                        } else break;
+                    }
+                }
+            }
+        }
 
     }
 
@@ -340,11 +384,6 @@ class Board {
             
         }
     }
-
-    moveDown() {
-
-    }
-
 }
 
 module.exports = Board;
@@ -379,13 +418,11 @@ class Game{
     // // }
 
     turn(direction) {
-        debugger;
-        this.board.moveAll(direction)
-        // if (!this.board.gameOver) {
-        //     this.board.moveAll(direction)
-        // } else {
-        //     console.log("GAME OVER!")
-        // }
+        if (!this.board.gameOver) {
+            this.board.moveAll(direction)
+        } else {
+          console.log("GAME OVER");
+        }
     }
 }
 module.exports = Game;

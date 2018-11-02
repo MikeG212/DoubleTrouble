@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function keyPressed(evt) {
     console.log(evt.keyCode);
-    debugger;
+    // debugger;
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');

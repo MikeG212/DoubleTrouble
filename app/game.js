@@ -17,13 +17,11 @@ class Game{
     // // }
 
     turn(direction) {
-        debugger;
-        this.board.moveAll(direction)
-        // if (!this.board.gameOver) {
-        //     this.board.moveAll(direction)
-        // } else {
-        //     console.log("GAME OVER!")
-        // }
+        if (!this.board.gameOver) {
+            this.board.moveAll(direction)
+        } else {
+          console.log("GAME OVER");
+        }
     }
 }
 module.exports = Game;
