@@ -110,22 +110,26 @@ const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
+let canvas = document.getElementById('doubleTroubleCanvas');
+let canvasContext = canvas.getContext('2d');
+let size = 4;
+
 let game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
 let board = game.board;
-let canvas, canvasContext;
+let width = canvas.width / size - 5;
 
 
 window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM CONTENT LOADED');
-    canvas = document.getElementById('doubleTroubleCanvas');
-    canvasContext = canvas.getContext('2d');
-    drawAll();
+        drawAll();
     document.addEventListener('keydown', keyPressed)
 })
 
 function keyPressed(evt) {
-    // console.log(evt.keyCode);
-    // debugger;
+    if (board.getAllEmptyPos().length == 0) {
+        endGame();
+        return;
+    }
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
@@ -147,10 +151,9 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
-
 function drawCells() {
-    for (let eachRow = 0; eachRow < CELL_ROWS; eachRow++) {
-        for (let eachCol = 0; eachCol < CELL_COLS; eachCol++) {
+    for (let eachRow = 0; eachRow < size; eachRow++) {
+        for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
@@ -179,11 +182,18 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    canvasContext.font = '40px serif';
+    let fontSize = width / 8;
+    canvasContext.font = `${fontSize}px serif`;
+    canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + 40, topLeftY + 60);
+        canvasContext.fillText(`${val}`, topLeftX + width / 4, topLeftY + width / 24 * 7);
     }
+}
+
+function endGame() {
+    canvas.style.opacity = "0.5"
+    board.gameOver = true;
 }
 
 
@@ -404,22 +414,9 @@ class Game{
         this.board = new Board();
     }
 
-    // // play(direction) {
-    // //     while (!this.gameOver) {
-    // //         debugger
-    // //         console.log("LET'S PLAY");
-    // //         this.turn(direction);
-    // //         this.board.createRandomTile(this.grid)
-    // //         this.gameOverCheck();
-    // //     }
-    // //     endGame();
-    // // }
-
     turn(direction) {
         if (!this.board.gameOver) {
             this.board.moveAll(direction)
-        } else {
-          console.log("GAME OVER");
         }
     }
 }

@@ -5,22 +5,9 @@ class Game{
         this.board = new Board();
     }
 
-    // // play(direction) {
-    // //     while (!this.gameOver) {
-    // //         debugger
-    // //         console.log("LET'S PLAY");
-    // //         this.turn(direction);
-    // //         this.board.createRandomTile(this.grid)
-    // //         this.gameOverCheck();
-    // //     }
-    // //     endGame();
-    // // }
-
     turn(direction) {
         if (!this.board.gameOver) {
             this.board.moveAll(direction)
-        } else {
-          console.log("GAME OVER");
         }
     }
 }
