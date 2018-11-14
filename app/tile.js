@@ -16,10 +16,15 @@ const TILE_COLORS = {
 
 class Tile {
 
-
     constructor(val = null) {
         this.val = val
         this.color = TILE_COLORS[val];
+        this.x;
+        this.y;
+    }
+
+    drawTile(){
+
     }
 }
 module.exports = Tile;

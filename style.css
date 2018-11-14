@@ -30,6 +30,17 @@ h1 {
     border-radius: 10%;
 }
 
+#size-header{
+    float: left;
+    margin-top: 0px;
+}
+
+#change-size{
+    width: 50px;
+    margin-left: 10px;
+    border-radius: 3px;
+}
+
 #doubleTroubleCanvas {
     background-color: green;
 }

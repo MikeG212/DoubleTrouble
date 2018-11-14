@@ -13,11 +13,18 @@ const KEY_DOWN = 40;
 
 let canvas = document.getElementById('doubleTroubleCanvas');
 let canvasContext = canvas.getContext('2d');
+
+let sizeInput = document.getElementById("size");
+let changeSize = document.getElementById("change-size");
+
+let score = 0;
 let size = 4;
+let width = canvas.width / size - 5;
+
+let gameOver = false;
 
 let game = new Game();
 let board = game.board;
-let width = canvas.width / size - 5;
 
 
 window.addEventListener('DOMContentLoaded', () => {
