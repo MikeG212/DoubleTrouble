@@ -116,7 +116,7 @@ let size = 4;
 
 let game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
 let board = game.board;
-let width = canvas.width / size - 5;
+let width = 800 / size - 5;
 
 
 window.addEventListener('DOMContentLoaded', () => {

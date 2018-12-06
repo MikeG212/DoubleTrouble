@@ -16,20 +16,25 @@ let canvasContext = canvas.getContext('2d');
 
 let sizeInput = document.getElementById("size");
 let changeSize = document.getElementById("change-size");
+let scoreLabel = document.getElementById("score");
 
 let score = 0;
 let size = 4;
 let width = canvas.width / size - 5;
 
+let cells = [];
+let fontSize;
 let gameOver = false;
 
-let game = new Game();
-let board = game.board;
+startGame();
 
+function startGame() {
+    let game = new Game();
+    let board = game.board;
+}
 
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM CONTENT LOADED');
-        drawAll();
+    drawAll();
     document.addEventListener('keydown', keyPressed)
 })
 
@@ -90,12 +95,12 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = width / 8;
+    let fontSize = 200;
     canvasContext.font = `${fontSize}px serif`;
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + width / 4, topLeftY + width / 24 * 7);
+        canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
     }
 }
 

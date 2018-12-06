@@ -1,15 +1,12 @@
 * {
-    background-color: rgba(159, 240, 10, 0.171);
+    background-color: darkgoldenrod;
+    text-align: center;
 }
 
 p {
-    color: black;
     font-size: 20px;
 } 
 
-h1 {
-    text-align: center;
-}
 
 #score {
     text-align: center;
@@ -19,7 +16,7 @@ h1 {
     clear: both;
 }
 
-#size-container {
+/* #size-container {
     margin-left: -50px;
     padding-left: 50%;
 }
@@ -33,19 +30,22 @@ h1 {
 #size-header{
     float: left;
     margin-top: 0px;
+    border-radius: 3px;
+      
 }
 
 #change-size{
     width: 50px;
     margin-left: 10px;
     border-radius: 3px;
-}
+} */
 
 #doubleTroubleCanvas {
-    background-color: green;
+    background-color: burlywood;
+    margin-left: auto;
+
 }
 
 #canvasContainer {
-    margin-left: -250px;
-    padding-left: 50px;
+    width: 200px;
 }
