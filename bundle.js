@@ -133,12 +133,17 @@ startGame();
 function startGame() {
     game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
     board = game.board;
-
+    drawAll();
+    canvas.style.opacity = "1";
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    drawAll();
     document.addEventListener('keydown', keyPressed)
+})
+
+let resetButton = document.getElementById("reset-button");
+resetButton.addEventListener('click', () => {
+    startGame();
 })
 
 function keyPressed(evt) {
@@ -171,7 +176,6 @@ function drawCells() {
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
-            debugger;
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
                       CELL_W - CELL_GAP,
@@ -194,7 +198,6 @@ function drawCanvas() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
     let fontSize = 20;
@@ -202,7 +205,6 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
-        console.log(val);
         canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
     }
 }
