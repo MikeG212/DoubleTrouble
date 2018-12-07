@@ -197,14 +197,13 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = 200;
+    let fontSize = 20;
     canvasContext.font = `${fontSize}px serif`;
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
         console.log(val);
-        // canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
-        canvasContext.fillText("hello", topLeftX + 200, topLeftY + (800 / 24) * 7);
+        canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
     }
 }
 
@@ -450,14 +449,14 @@ module.exports = Game;
 /***/ (function(module, exports) {
 
 const TILE_COLORS = {
-    null: "#FFFFFF",
+    null: "yellow",
     2: "#FFFFF0",
-    4: "#FF00A6",
-    8: "#DEOOFF",
+    4: "red",
+    8: "orange",
     16: "#6F00FF",
     32: "#003CFF",
     64: "#00EBFF",
-    128: "#000000",
+    128: "green",
     256: "#00FF22",
     512: "#7CFF00",
     1024: "#F7FF00",

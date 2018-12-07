@@ -98,14 +98,13 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = 200;
+    let fontSize = 20;
     canvasContext.font = `${fontSize}px serif`;
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
         console.log(val);
-        // canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
-        canvasContext.fillText("hello", topLeftX + 200, topLeftY + (800 / 24) * 7);
+        canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
     }
 }
 

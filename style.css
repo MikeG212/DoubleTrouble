@@ -16,6 +16,11 @@ p {
     clear: both;
 }
 
+#reset-button {
+    background-color: whitesmoke;
+    border-radius: 10%;
+}
+
 /* #size-container {
     margin-left: -50px;
     padding-left: 50%;
