@@ -26,11 +26,15 @@ let cells = [];
 let fontSize;
 let gameOver = false;
 
+let game;
+let board;
+
 startGame();
 
 function startGame() {
-    let game = new Game();
-    let board = game.board;
+    game = new Game();
+    board = game.board;
+
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -68,6 +72,7 @@ function drawCells() {
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
+            debugger;
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
                       CELL_W - CELL_GAP,
@@ -81,8 +86,6 @@ function drawCells() {
 
 
 function drawAll() {
-    // console.log(board.grid)
-    // debugger
     drawCanvas();
     drawCells();
 }
@@ -92,7 +95,7 @@ function drawCanvas() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    
+    debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
     let fontSize = 200;
@@ -100,7 +103,9 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
+        console.log(val);
+        // canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
+        canvasContext.fillText("hello", topLeftX + 200, topLeftY + (800 / 24) * 7);
     }
 }
 

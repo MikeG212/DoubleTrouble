@@ -112,16 +112,32 @@ const KEY_DOWN = 40;
 
 let canvas = document.getElementById('doubleTroubleCanvas');
 let canvasContext = canvas.getContext('2d');
+
+let sizeInput = document.getElementById("size");
+let changeSize = document.getElementById("change-size");
+let scoreLabel = document.getElementById("score");
+
+let score = 0;
 let size = 4;
+let width = canvas.width / size - 5;
 
-let game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
-let board = game.board;
-let width = 800 / size - 5;
+let cells = [];
+let fontSize;
+let gameOver = false;
 
+let game;
+let board;
+
+startGame();
+
+function startGame() {
+    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
+    board = game.board;
+
+}
 
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM CONTENT LOADED');
-        drawAll();
+    drawAll();
     document.addEventListener('keydown', keyPressed)
 })
 
@@ -155,6 +171,7 @@ function drawCells() {
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
+            debugger;
             colorRect(CELL_W * eachRow + CELL_GAP,
                       CELL_H * eachCol + CELL_GAP,
                       CELL_W - CELL_GAP,
@@ -168,8 +185,6 @@ function drawCells() {
 
 
 function drawAll() {
-    // console.log(board.grid)
-    // debugger
     drawCanvas();
     drawCells();
 }
@@ -179,15 +194,17 @@ function drawCanvas() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    
+    debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = width / 8;
+    let fontSize = 200;
     canvasContext.font = `${fontSize}px serif`;
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + width / 4, topLeftY + width / 24 * 7);
+        console.log(val);
+        // canvasContext.fillText(`${val}`, topLeftX + 200, topLeftY + 800 / 24 * 7);
+        canvasContext.fillText("hello", topLeftX + 200, topLeftY + (800 / 24) * 7);
     }
 }
 
@@ -307,6 +324,7 @@ class Board {
                             let double = this.grid[j][row].val * 2;
                             this.grid[j][row - 1] = new Tile(double);
                             this.score += double;
+                            console.log(this.score);
                             this.grid[j][row] = new Tile(null);
                             break;
                         } else break;
@@ -432,28 +450,33 @@ module.exports = Game;
 /***/ (function(module, exports) {
 
 const TILE_COLORS = {
-    null: "yellow",
-    2: "red",
-    4: "orange",
-    8: "green",
-    16: "blue",
-    32: "indigo",
-    64: "purple",
-    128: "red",
-    256: "orange",
-    512: "green",
-    1024: "blue",
-    2048: "indigo",
-    4096: "purple"
+    null: "#FFFFFF",
+    2: "#FFFFF0",
+    4: "#FF00A6",
+    8: "#DEOOFF",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "#000000",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00",
 };
 
 class Tile {
 
-
     constructor(val = null) {
         this.val = val
         this.color = TILE_COLORS[val];
+        this.x;
+        this.y;
     }
+
+    // drawTile(){
+
+    // }
 }
 module.exports = Tile;
 
