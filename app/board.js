@@ -125,6 +125,7 @@ class Board {
                             let double = this.grid[j][row].val * 2;
                             this.grid[j][row + 1] = new Tile(double);
                             this.score += double;
+                            console.log(this.score);
                             this.grid[j][row] = new Tile(null);
                             break;
                         } else break;
@@ -149,6 +150,7 @@ class Board {
                             let double = this.grid[col][j].val * 2
                             this.grid[col + 1][j] = new Tile(double);
                             this.score += double;
+                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;
@@ -173,7 +175,8 @@ class Board {
                         } else if (this.grid[col - 1][j].val == this.grid[col][j].val) {
                             let double = this.grid[col][j].val * 2;
                             this.grid[col - 1][j] = new Tile(double);
-                            this.score += double
+                            this.score += double;
+                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;

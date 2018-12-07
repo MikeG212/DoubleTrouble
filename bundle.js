@@ -117,7 +117,6 @@ let sizeInput = document.getElementById("size");
 let changeSize = document.getElementById("change-size");
 let scoreLabel = document.getElementById("score");
 
-let score = 0;
 let size = 4;
 let width = canvas.width / size - 5;
 
@@ -146,7 +145,11 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
+let scoreboard = document.getElementById("scoreboard");
+
+
 function keyPressed(evt) {
+    debugger
     if (board.getAllEmptyPos().length == 0) {
         endGame();
         return;
@@ -167,7 +170,7 @@ function keyPressed(evt) {
         default:
             break;
     }
-
+    scoreboard.innerHTML = `Score: ${board.score}`
     drawAll();
     evt.preventDefault();
 }
@@ -352,6 +355,7 @@ class Board {
                             let double = this.grid[j][row].val * 2;
                             this.grid[j][row + 1] = new Tile(double);
                             this.score += double;
+                            console.log(this.score);
                             this.grid[j][row] = new Tile(null);
                             break;
                         } else break;
@@ -376,6 +380,7 @@ class Board {
                             let double = this.grid[col][j].val * 2
                             this.grid[col + 1][j] = new Tile(double);
                             this.score += double;
+                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;
@@ -400,7 +405,8 @@ class Board {
                         } else if (this.grid[col - 1][j].val == this.grid[col][j].val) {
                             let double = this.grid[col][j].val * 2;
                             this.grid[col - 1][j] = new Tile(double);
-                            this.score += double
+                            this.score += double;
+                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;

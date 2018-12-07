@@ -18,7 +18,6 @@ let sizeInput = document.getElementById("size");
 let changeSize = document.getElementById("change-size");
 let scoreLabel = document.getElementById("score");
 
-let score = 0;
 let size = 4;
 let width = canvas.width / size - 5;
 
@@ -47,7 +46,11 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
+let scoreboard = document.getElementById("scoreboard");
+
+
 function keyPressed(evt) {
+    debugger
     if (board.getAllEmptyPos().length == 0) {
         endGame();
         return;
@@ -68,7 +71,7 @@ function keyPressed(evt) {
         default:
             break;
     }
-
+    scoreboard.innerHTML = `Score: ${board.score}`
     drawAll();
     evt.preventDefault();
 }
