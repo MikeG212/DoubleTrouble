@@ -215,6 +215,10 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
 function endGame() {
     canvas.style.opacity = "0.5"
     board.gameOver = true;
+    canvasContext.font = `75px serif`;
+    canvasContext.textAlign = "center";
+    canvasContext.fillStyle = "black";
+    canvasContext.fillText(`YOU SUCK`, 200, 200);
 }
 
 
