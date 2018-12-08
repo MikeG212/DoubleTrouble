@@ -132,7 +132,7 @@ startGame();
 function startGame() {
     game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
     board = game.board;
-    scoreboard.innerHTML = `Score: ${board.score}`;
+    scoreboard.innerHTML = `Score: 0`;
     drawAll();
     canvas.style.opacity = "1";
 }

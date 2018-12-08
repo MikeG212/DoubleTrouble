@@ -33,7 +33,7 @@ startGame();
 function startGame() {
     game = new Game();
     board = game.board;
-    scoreboard.innerHTML = `Score: ${board.score}`;
+    scoreboard.innerHTML = `Score: 0`;
     drawAll();
     canvas.style.opacity = "1";
 }
