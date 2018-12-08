@@ -115,7 +115,7 @@ let canvasContext = canvas.getContext('2d');
 
 let sizeInput = document.getElementById("size");
 let changeSize = document.getElementById("change-size");
-let scoreLabel = document.getElementById("score");
+let scoreboard = document.getElementById("scoreboard");
 
 let size = 4;
 let width = canvas.width / size - 5;
@@ -132,6 +132,7 @@ startGame();
 function startGame() {
     game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
     board = game.board;
+    scoreboard.innerHTML = `Score: ${board.score}`;
     drawAll();
     canvas.style.opacity = "1";
 }
@@ -145,11 +146,10 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
-let scoreboard = document.getElementById("scoreboard");
+
 
 
 function keyPressed(evt) {
-    debugger
     if (board.getAllEmptyPos().length == 0) {
         endGame();
         return;
