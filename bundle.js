@@ -298,7 +298,18 @@ class Board {
         this.grid[col][row] = tile;
     }
 
+    deepDup(arr) {
+        return arr.map(el => {
+            if (el instanceof Array) {
+                return deepDup(el)
+            } else {
+                return el;
+            }
+         });
+    }
+
     moveAll(direction) {
+        // let prevGrid = deepDup(this.grid); deep dup this.grid to store previous state
         switch (direction) {
             case "left":
                 this.moveLeft();
@@ -315,6 +326,10 @@ class Board {
             default: 
                 break;
         }
+        // if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
+        //     this.createRandomTile();
+        // }
+
         this.createRandomTile();
     }
 
