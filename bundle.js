@@ -130,6 +130,7 @@ let board;
 startGame();
 
 function startGame() {
+    debugger;
     game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a();
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
@@ -246,8 +247,9 @@ class Board {
     blankGrid() {
         let blankArr = new Array(4);
         for (let i = 0; i < blankArr.length; i++) {
-            blankArr[i] = new Array(new Tile(null), new Tile(null), new Tile(null), new Tile(null));
+            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }), new Tile(null, { col: i, row: 1 }), new Tile(null, { col: i, row: 2 }), new Tile(null, { col: i, row: 3 }))
         }
+        debugger;
         return blankArr;
     }
 
@@ -265,27 +267,17 @@ class Board {
     }
 
     createRandomTile() {
-        let allEmptyPos = this.getAllEmptyPos();
-        if (allEmptyPos.length === 0) {
-            this.gameOver = true;
-            return null;
-        }
-        let randomIndex = Math.floor(Math.random() * allEmptyPos.length)
-        let pos = allEmptyPos[randomIndex];
-        
-        let val;
-        if (Math.random() < .5) {
-            val = 2;
-        } else {
-            val = 4;
-        }
-
-        let newTile = new Tile(val);
+        let pos = this.generateRandomAvailablePos();
+        let val = Math.random() < .5 ? 2 : 4;
+        let newTile = new Tile(val, pos);
         this.setPos(pos, newTile);
     }
 
-    generateRandomPos() {
-        return [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)];
+    generateRandomAvailablePos() {
+        let allEmptyPos = this.getAllEmptyPos();
+        let randomIndex = Math.floor(Math.random() * allEmptyPos.length);
+        debugger;
+        return allEmptyPos[randomIndex];
     }
 
     getPos(pos) {
@@ -298,18 +290,30 @@ class Board {
         this.grid[col][row] = tile;
     }
 
-    deepDup(arr) {
-        return arr.map(el => {
-            if (el instanceof Array) {
-                return deepDup(el)
-            } else {
-                return el;
-            }
-         });
-    }
+    // deepDup(arr) {
+    //     return arr.map(el => {
+    //         if (el instanceof Array) {
+    //             return deepDup(el)
+    //         } else {
+    //             return el;
+    //         }
+    //      });
+    // }
+    
+    // isValidMove(moveCommand) {
+    //     let prevGrid = deepDup(this.grid); //deep dup this.grid to store previous state
+    //     let newGrid = this.moveComand;
+    //     for (let i = 0; i < prevGrid.length; i++) {
+    //         for (let j = 0; j < prevGrid.length; j++) {
+    //             if prevGrid[]
+    //         }
+    //     }
+
+    //     return true;
+    // }
 
     moveAll(direction) {
-        // let prevGrid = deepDup(this.grid); deep dup this.grid to store previous state
+        
         switch (direction) {
             case "left":
                 this.moveLeft();
@@ -326,9 +330,9 @@ class Board {
             default: 
                 break;
         }
-        // if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
-        //     this.createRandomTile();
-        // }
+        if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
+            this.createRandomTile();
+        }
 
         this.createRandomTile();
     }
@@ -347,7 +351,6 @@ class Board {
                             let double = this.grid[j][row].val * 2;
                             this.grid[j][row - 1] = new Tile(double);
                             this.score += double;
-                            console.log(this.score);
                             this.grid[j][row] = new Tile(null);
                             break;
                         } else break;
@@ -374,7 +377,6 @@ class Board {
                             let double = this.grid[j][row].val * 2;
                             this.grid[j][row + 1] = new Tile(double);
                             this.score += double;
-                            console.log(this.score);
                             this.grid[j][row] = new Tile(null);
                             break;
                         } else break;
@@ -399,7 +401,6 @@ class Board {
                             let double = this.grid[col][j].val * 2
                             this.grid[col + 1][j] = new Tile(double);
                             this.score += double;
-                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;
@@ -425,7 +426,6 @@ class Board {
                             let double = this.grid[col][j].val * 2;
                             this.grid[col - 1][j] = new Tile(double);
                             this.score += double;
-                            console.log(this.score);
                             this.grid[col][j] = new Tile(null);
                             break;
                         } else break;
@@ -493,11 +493,11 @@ const TILE_COLORS = {
 
 class Tile {
 
-    constructor(val = null) {
+    constructor(val = null, pos) {
         this.val = val
         this.color = TILE_COLORS[val];
-        this.x;
-        this.y;
+        this.col = pos.col;
+        this.row = pos.row;
     }
 
     // drawTile(){

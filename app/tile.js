@@ -16,11 +16,11 @@ const TILE_COLORS = {
 
 class Tile {
 
-    constructor(val = null) {
+    constructor(val = null, pos) {
         this.val = val
         this.color = TILE_COLORS[val];
-        this.x;
-        this.y;
+        this.col = pos.col;
+        this.row = pos.row;
     }
 
     // drawTile(){

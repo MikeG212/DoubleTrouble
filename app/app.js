@@ -31,6 +31,7 @@ let board;
 startGame();
 
 function startGame() {
+    debugger;
     game = new Game();
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
