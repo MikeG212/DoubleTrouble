@@ -437,7 +437,7 @@ class Board {
                         } else if (this.grid[col - 1][row].val == this.grid[col][row].val) {
                             let double = this.grid[col][row].val * 2;
                             pos = { x: row, y: col - 1 };
-                            this.grid[col - 1][row] = new Tile(double);
+                            this.grid[col - 1][row] = new Tile(double, pos);
                             this.score += double;
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
