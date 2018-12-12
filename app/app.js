@@ -56,8 +56,8 @@ function keyPressed(evt) {
         endGame();
         return;
     }
-    debugger
-    console.log(evt.keycode);
+    // debugger
+    // console.log(evt.keycode);
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
@@ -75,6 +75,7 @@ function keyPressed(evt) {
             break;
     }
     scoreboard.innerHTML = `Score: ${board.score}`
+    board.setAllMergable();
     drawAll();
     evt.preventDefault();
 }

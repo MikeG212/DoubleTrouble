@@ -21,10 +21,11 @@ class Tile {
         this.color = TILE_COLORS[val];
         this.col = pos.col;
         this.row = pos.row;
+        this.mergable = false;
     }
 
-    // drawTile(){
-
-    // }
+    makeMergable() {
+        this.mergable = true;
+    }
 }
 module.exports = Tile;

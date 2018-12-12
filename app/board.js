@@ -14,8 +14,15 @@ class Board {
         for (let i = 0; i < blankArr.length; i++) {
             blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }), new Tile(null, { col: i, row: 1 }), new Tile(null, { col: i, row: 2 }), new Tile(null, { col: i, row: 3 }))
         }
-        debugger;
         return blankArr;
+    }
+
+    setAllMergable() {
+        for (let row = 0; row < this.grid.length; row++) {
+            for (let col = 0;  col < this.grid.length; col++) {
+                (this.grid[col][row]).makeMergable();
+            }
+        }
     }
 
     getAllEmptyPos() {
@@ -111,9 +118,10 @@ class Board {
                         if (!this.grid[col][row - 1].val) {
                             this.grid[col][row - 1] = this.grid[col][row]
                             pos = { x: row - 1, y: col}
-                            this.grid[col][row] = new Tile(null, pos)
+                            this.grid[col][row] = new Tile(null, pos);
                             row--;
-                        } else if (this.grid[col][row - 1].val == this.grid[col][row].val) {
+                        } else if (this.grid[col][row - 1].val == this.grid[col][row].val &&
+                            this.grid[col][row - 1].mergable && this.grid[col][row].mergable) {
                             let double = this.grid[col][row].val * 2;
                             pos = { x: row - 1, y: col}
                             this.grid[col][row - 1] = new Tile(double, pos);
@@ -142,7 +150,8 @@ class Board {
                             pos = { x: row + 1, y: col }
                             this.grid[col][row] = new Tile(null, pos);
                             row++;
-                        } else if (this.grid[col][row + 1].val == this.grid[col][row].val) {
+                        } else if (this.grid[col][row + 1].val == this.grid[col][row].val &&
+                            this.grid[col][row + 1].mergable && this.grid[col][row].mergable) {
                             let double = this.grid[col][row].val * 2;
                             pos = { x: row + 1, y: col }
                             this.grid[col][row + 1] = new Tile(double, pos);
@@ -169,7 +178,8 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos)
                             col++;
-                        } else if (this.grid[col + 1][row].val == this.grid[col][row].val) {
+                        } else if (this.grid[col + 1][row].val == this.grid[col][row].val &&
+                            this.grid[col + 1][row].mergable && this.grid[col][row].mergable) {
                             let double = this.grid[col][row].val * 2
                             pos = { x: row, y: col + 1 };
                             this.grid[col + 1][row] = new Tile(double, pos);
@@ -197,7 +207,8 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             col--;
-                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val) {
+                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val &&
+                            this.grid[col - 1][row].mergable && this.grid[col][row].mergable) {
                             let double = this.grid[col][row].val * 2;
                             pos = { x: row, y: col - 1 };
                             this.grid[col - 1][row] = new Tile(double, pos);
