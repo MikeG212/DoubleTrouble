@@ -1,8 +1,8 @@
 const Tile = require("./tile");
 
 class Board {
-    constructor(colorRect) {
-        this.colorRect = colorRect
+    constructor(drawCells) {
+        this.drawCells = drawCells;
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
@@ -87,7 +87,6 @@ class Board {
     // }
 
     isValidMove(direction) {
-        debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
@@ -160,14 +159,11 @@ class Board {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
-                            // debugger;
                             arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col }
                             arr[col][row] = new Tile(null, pos);
-                            // // arr[col][row - 1].drawTile(this.ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val);
-                            // // arr[col][row].drawTile();
-                            // this.colorRect();
-                            //trigger redraw of canvas
+                            this.drawCells
+                            setTimeout(console.log("Waiting"), 10000);
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
