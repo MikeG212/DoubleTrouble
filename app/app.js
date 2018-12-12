@@ -52,12 +52,7 @@ resetButton.addEventListener('click', () => {
 
 
 function keyPressed(evt) {
-    if (board.getAllEmptyPos().length == 0) {
-        endGame();
-        return;
-    }
     // debugger
-    // console.log(evt.keycode);
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');

@@ -62,15 +62,15 @@ class Board {
         this.grid[col][row] = tile;
     }
 
-    // deepDup(arr) {
-    //     return arr.map(el => {
-    //         if (el instanceof Array) {
-    //             return deepDup(el)
-    //         } else {
-    //             return el;
-    //         }
-    //      });
-    // }
+    deepDup(arr) {
+        return arr.map(el => {
+            if (el instanceof Array) {
+                return this.deepDup(el)
+            } else {
+                return el;
+            }
+         });
+    }
     
     // isValidMove(moveCommand) {
     //     let prevGrid = deepDup(this.grid); //deep dup this.grid to store previous state
@@ -84,8 +84,10 @@ class Board {
     //     return true;
     // }
 
-    moveAll(direction) {
-        
+    isValidMove(direction) {
+        // debugger;
+        let currentState = this.deepDup(this.grid);
+        // debugger;
         switch (direction) {
             case "left":
                 this.moveLeft();
@@ -99,17 +101,52 @@ class Board {
             case "down":
                 this.moveDown();
                 break;
-            default: 
+            default:
                 break;
         }
-        // if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
-        //     this.createRandomTile();
-        // }
+        for (let row = 0; row < this.grid.length; row++) {
+            for (let col = 0; col < this.grid.length; col++) {
+                if (this.grid[col][row] !== currentState[col][row]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
+    hasValidMoves() {
+        return isValidMove("left") || isValidMove("right") || isValidMove("up") ||
+            isValidMove("down");
+
+
+    }
+
+    moveAll(direction) {
+        if (this.isValidMove(direction)) {
+            switch (direction) {
+                case "left":
+                    // debugger;
+                    this.moveLeft();
+                    break;
+                case "right":
+                    this.moveRight();
+                    break;
+                case "up":
+                    this.moveUp();
+                    break;
+                case "down":
+                    this.moveDown();
+                    break;
+                default: 
+                    break;
+            }
+            this.createRandomTile();
+        }
     }
 
     moveUp() {
         let pos;
-        let invalidCounter = 0;
         for (let col = 0; col < this.grid.length; col++) {
             for (let row = 1; row < this.grid.length; row++) {
                 if (this.grid[col][row].val) {
@@ -128,11 +165,8 @@ class Board {
                             pos = { x: row, y: col }
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else {
-                            invalidCounter++;
-                            console.log(invalidCounter);
+                        } else 
                             break;
-                        }
                     }
                 }
 
@@ -140,15 +174,10 @@ class Board {
 
         }
 
-        if (invalidCounter < 3) {
-            this.createRandomTile();
-        }
-
     }
 
     moveDown() {
         let pos;
-        let invalidCounter = 0;
         for (let col = 0; col < this.grid.length; col++) {
             for (let row = this.grid.length - 1; row >= 0; row--) {
                 if (this.grid[col][row].val) {
@@ -167,20 +196,13 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else {
-                            invalidCounter++;
-                            break
-                        };
-                    }
+                        } else break;
+                    };
                 }
             }
         }
-
-        if (invalidCounter < 4) {
-            this.createRandomTile();
-        }
-
     }
+
 
     moveRight() {
         let pos;
@@ -203,20 +225,14 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else {
-                            invalidCounter++;
-                            break
-                        };
-                    }
+                        } else break
+                    };
                 }
-
             }
 
         }
-        if (invalidCounter < 4) {
-            this.createRandomTile();
-        }
     }
+
 
     moveLeft() {
         let pos;
@@ -238,21 +254,17 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else {
-                            invalidCounter++;
-                            break;
-                        }
+                        } else break;
                     }
                 }
-                
             }
+                
+        }
             
-        }
-        if (invalidCounter < 4) {
-            this.createRandomTile();
-        }
     }
+
 }
+
 
 module.exports = Board;
 
