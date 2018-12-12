@@ -131,7 +131,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(drawCells);
+    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect);
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -178,7 +178,6 @@ function keyPressed(evt) {
 }
 
 function drawCells() {
-    console.log("HI!")
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
@@ -237,8 +236,8 @@ function endGame() {
 const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
 
 class Board {
-    constructor(drawCells) {
-        this.drawCells = drawCells;
+    constructor(colorRect) {
+        this.colorRect = colorRect
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
@@ -323,6 +322,7 @@ class Board {
     // }
 
     isValidMove(direction) {
+        debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
@@ -395,11 +395,14 @@ class Board {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
+                            // debugger;
                             arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col }
                             arr[col][row] = new Tile(null, pos);
-                            this.drawCells
-                            setTimeout(console.log("Waiting"), 10000);
+                            // // arr[col][row - 1].drawTile(this.ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val);
+                            // // arr[col][row].drawTile();
+                            // this.colorRect();
+                            //trigger redraw of canvas
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
@@ -532,8 +535,8 @@ module.exports = Board;
 const Board = __webpack_require__(/*! ./board */ "./app/board.js");
 
 class Game{
-    constructor(drawCells) {
-        this.board = new Board(drawCells);
+    constructor(colorRect) {
+        this.board = new Board(colorRect);
     }
 
     turn(direction) {

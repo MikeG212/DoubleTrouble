@@ -32,7 +32,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new Game(drawCells);
+    game = new Game(colorRect);
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -79,7 +79,6 @@ function keyPressed(evt) {
 }
 
 function drawCells() {
-    console.log("HI!")
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
