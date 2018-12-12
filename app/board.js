@@ -48,7 +48,7 @@ class Board {
     generateRandomAvailablePos() {
         let allEmptyPos = this.getAllEmptyPos();
         let randomIndex = Math.floor(Math.random() * allEmptyPos.length);
-        debugger;
+        // debugger;
         return allEmptyPos[randomIndex];
     }
 
@@ -105,12 +105,11 @@ class Board {
         // if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
         //     this.createRandomTile();
         // }
-
-        this.createRandomTile();
     }
 
     moveUp() {
         let pos;
+        let invalidCounter = 0;
         for (let col = 0; col < this.grid.length; col++) {
             for (let row = 1; row < this.grid.length; row++) {
                 if (this.grid[col][row].val) {
@@ -129,7 +128,11 @@ class Board {
                             pos = { x: row, y: col }
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else break;
+                        } else {
+                            invalidCounter++;
+                            console.log(invalidCounter);
+                            break;
+                        }
                     }
                 }
 
@@ -137,10 +140,15 @@ class Board {
 
         }
 
+        if (invalidCounter < 3) {
+            this.createRandomTile();
+        }
+
     }
 
     moveDown() {
         let pos;
+        let invalidCounter = 0;
         for (let col = 0; col < this.grid.length; col++) {
             for (let row = this.grid.length - 1; row >= 0; row--) {
                 if (this.grid[col][row].val) {
@@ -159,16 +167,24 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else break;
+                        } else {
+                            invalidCounter++;
+                            break
+                        };
                     }
                 }
             }
+        }
+
+        if (invalidCounter < 4) {
+            this.createRandomTile();
         }
 
     }
 
     moveRight() {
         let pos;
+        let invalidCounter = 0;
         for (let row = 0; row < this.grid.length; row++) {
             for (let col = this.grid.length - 1; col >= 0; col--) {
                 if (this.grid[col][row].val) {
@@ -187,28 +203,34 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else break;
+                        } else {
+                            invalidCounter++;
+                            break
+                        };
                     }
                 }
 
             }
 
         }
+        if (invalidCounter < 4) {
+            this.createRandomTile();
+        }
     }
 
     moveLeft() {
         let pos;
+        let invalidCounter = 0;
         for (let row = 0; row < this.grid.length; row++) {
             for (let col = 1; col < this.grid.length; col++) {
                 if (this.grid[col][row].val) {
                     while (col > 0) {
                         if (!this.grid[col - 1][row].val) {
-                            this.grid[col - 1][row] = this.grid[col][row]
+                            this.grid[col - 1][row] = this.grid[col][row];
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             col--;
-                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val &&
-                            this.grid[col - 1][row].mergable && this.grid[col][row].mergable) {
+                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val && this.grid[col - 1][row].mergable && this.grid[col][row].mergable) {
                             let double = this.grid[col][row].val * 2;
                             pos = { x: row, y: col - 1 };
                             this.grid[col - 1][row] = new Tile(double, pos);
@@ -216,12 +238,18 @@ class Board {
                             pos = { x: row, y: col };
                             this.grid[col][row] = new Tile(null, pos);
                             break;
-                        } else break;
+                        } else {
+                            invalidCounter++;
+                            break;
+                        }
                     }
                 }
                 
             }
             
+        }
+        if (invalidCounter < 4) {
+            this.createRandomTile();
         }
     }
 }
