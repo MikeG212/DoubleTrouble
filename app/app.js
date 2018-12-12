@@ -1,5 +1,7 @@
 import Game from './game'
 
+var mouseX;
+var mouseY;
 const CELL_W = 100;
 const CELL_H = 100;
 const CELL_ROWS = 4;
@@ -28,8 +30,6 @@ let gameOver = false;
 let game;
 let board;
 
-startGame();
-
 function startGame() {
     // debugger;
     game = new Game(drawCells);
@@ -40,6 +40,8 @@ function startGame() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    startGame();
+    setInterval(drawAll, 1000 / 30);
     document.addEventListener('keydown', keyPressed)
 })
 
@@ -79,12 +81,13 @@ function keyPressed(evt) {
 }
 
 function drawCells() {
-    console.log("HI!")
-    for (let eachRow = 0; eachRow < size; eachRow++) {
-        for (let eachCol = 0; eachCol < size; eachCol++) {
-            let tile = board.grid[eachRow][eachCol];
-            tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
-                CELL_H * eachCol + CELL_GAP,
+    for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+            debugger;
+            let tile = board.grid[col][row];
+            tile.drawTile(canvasContext,
+                CELL_W * tile.row + CELL_GAP,
+                CELL_H * tile.col + CELL_GAP,
                 CELL_W - CELL_GAP,
                 CELL_H - CELL_GAP,
             );
@@ -92,10 +95,19 @@ function drawCells() {
     }    
 }
 
+function updateMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    var root = document.documentElement;
+
+    mouseX = evt.clientX - rect.left - root.scrollLeft;
+    mouseY = evt.clientY - rect.top - root.scrollTop;
+}
+
 
 function drawAll() {
     drawCanvas();
     drawCells();
+    colorText(`${mouseX},${mouseY}`, mouseX, mouseY, 'blue');
 }
 
 function drawCanvas() {
@@ -113,6 +125,11 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     if (val) {
         canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
     }
+}
+
+function colorText(showWords, textX, textY, fillColor) {
+    canvasContext.fillStyle = fillColor;
+    canvasContext.fillText(showWords, textX, textY);
 }
 
 function endGame() {

@@ -41,10 +41,12 @@ class Board {
     }
 
     createRandomTile() {
-        let pos = this.generateRandomAvailablePos();
+        let doublet = this.generateRandomAvailablePos();
+        let pos = { col: doublet[0], row: doublet[1] };
         let val = Math.random() < .5 ? 2 : 4;
+        // debugger;
         let newTile = new Tile(val, pos);
-        this.setPos(pos, newTile);
+        this.setPos(doublet, newTile);
     }
 
     generateRandomAvailablePos() {
@@ -59,8 +61,8 @@ class Board {
         return this.grid[col][row];
     }
     
-    setPos(pos, tile) {
-        const [col, row] = pos;
+    setPos(doublet, tile) {
+        const [col, row] = doublet;
         this.grid[col][row] = tile;
     }
 
@@ -73,21 +75,9 @@ class Board {
             }
          });
     }
-    
-    // isValidMove(moveCommand) {
-    //     let prevGrid = deepDup(this.grid); //deep dup this.grid to store previous state
-    //     let newGrid = this.moveComand;
-    //     for (let i = 0; i < prevGrid.length; i++) {
-    //         for (let j = 0; j < prevGrid.length; j++) {
-    //             if prevGrid[]
-    //         }
-    //     }
-
-    //     return true;
-    // }
 
     isValidMove(direction) {
-        let setScore = this.score
+        let setScore = this.score;
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
         // debugger;
@@ -110,7 +100,6 @@ class Board {
         for (let row = 0; row < prevState.length; row++) {
             for (let col = 0; col < prevState.length; col++) {
                 if (prevState[col][row] !== toMutateState[col][row]) {
-                    // debugger;
                     this.score = setScore;
                     return true;
                 }
@@ -124,7 +113,7 @@ class Board {
 
     hasValidMoves() {
         // debugger
-        return this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
+        return this.getAllEmptyPos().length > 0 || this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
         // return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching same #'s
 
     }
@@ -151,28 +140,39 @@ class Board {
             this.createRandomTile();
         }
     }
+
+    
     
     moveUp(arr) {
-        let pos;
+        let startPos;
+        let nextPos;
         for (let col = 0; col < arr.length; col++) {
             for (let row = 1; row < arr.length; row++) {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
-                            arr[col][row - 1] = arr[col][row]
-                            pos = { x: row - 1, y: col }
-                            arr[col][row] = new Tile(null, pos);
-                            this.drawCells
-                            setTimeout(console.log("Waiting"), 10000);
+                            // debugger
+                            let movingTile = arr[col][row];
+                            nextPos = movingTile.row - 1;
+                            while (movingTile.row > nextPos) {
+                                debugger
+                                movingTile.row -= .1;
+                                this.drawCells();
+                            }
+                            //add sliding logic here
+                            arr[col][row - 1] = arr[col][row] //assigns square above to below square's value
+                            startPos = { x: row, y: col };
+                            nextPos = { x: row - 1, y: col };
+                            arr[col][row] = new Tile(null, startPos);
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
-                            pos = { x: row - 1, y: col}
-                            arr[col][row - 1] = new Tile(double, pos);
+                            nextPos = { x: row - 1, y: col}
+                            arr[col][row - 1] = new Tile(double, nextPos);
                             this.score += double;
-                            pos = { x: row, y: col }
-                            arr[col][row] = new Tile(null, pos);
+                            startPos = { x: row, y: col }
+                            arr[col][row] = new Tile(null, startPos);
                             break;
                         } else 
                             break;
@@ -187,6 +187,7 @@ class Board {
     }
 
     moveDown(arr) {
+        let startPos;
         let pos;
         for (let col = 0; col < arr.length; col++) {
             for (let row = arr.length - 1; row >= 0; row--) {
@@ -194,8 +195,8 @@ class Board {
                     while (row < 3) {
                         if (!arr[col][row + 1].val) {
                             arr[col][row + 1] = arr[col][row];
-                            pos = { x: row + 1, y: col }
-                            arr[col][row] = new Tile(null, pos);
+                            startPos = { x: row + 1, y: col }
+                            arr[col][row] = new Tile(null, startPos);
                             //trigger redraw of canvas
                             row++;
                         } else if (arr[col][row + 1].val == arr[col][row].val &&
