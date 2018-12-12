@@ -14,7 +14,7 @@ class Board {
     blankGrid() {
         let blankArr = new Array(4);
         for (let i = 0; i < blankArr.length; i++) {
-            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }), new Tile(null, { col: i, row: 1 }), new Tile(null, { col: i, row: 2 }), new Tile(null, { col: i, row: 3 }))
+            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }), new Tile(null, { col: i, row: 1 }), new Tile(null, { col: i, row: 2 }), new Tile(null, { col: i, row: 3 }));
         }
         return blankArr;
     }
@@ -22,9 +22,13 @@ class Board {
     setAllMergable() {
         for (let row = 0; row < this.grid.length; row++) {
             for (let col = 0;  col < this.grid.length; col++) {
-                (this.grid[col][row]).makeMergable();
+                let tile = this.grid[col][row]
+                tile.makeMergable();
+                tile.row = row;
+                tile.col = col;
             }
         }
+        debugger;
     }
 
     getAllEmptyPos() {
@@ -87,7 +91,7 @@ class Board {
     // }
 
     isValidMove(direction) {
-        debugger;
+        //debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
@@ -125,7 +129,7 @@ class Board {
 
     hasValidMoves() {
         // debugger
-        return this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
+        return this.getAllEmptyPos().length > 0 || this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
         // return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching same #'s
 
     }
@@ -160,7 +164,7 @@ class Board {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
-                            // debugger;
+                            debugger;
                             arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col }
                             arr[col][row] = new Tile(null, pos);
