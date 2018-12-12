@@ -1,12 +1,14 @@
 const Tile = require("./tile");
 
 class Board {
-    constructor() {
+    constructor(colorRect) {
+        this.colorRect = colorRect
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
         this.createRandomTile(this.grid);
         this.score = 0;
+
     }
 
     blankGrid() {
@@ -85,7 +87,8 @@ class Board {
     // }
 
     isValidMove(direction) {
-        // debugger;
+        debugger;
+        let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
         // debugger;
@@ -109,11 +112,13 @@ class Board {
             for (let col = 0; col < prevState.length; col++) {
                 if (prevState[col][row] !== toMutateState[col][row]) {
                     // debugger;
+                    this.score = setScore;
                     return true;
                 }
             }
         }
         // debugger/// why does it sometimes debugger here?
+        this.score = setScore;
         return false;
 
     }
@@ -147,7 +152,7 @@ class Board {
             this.createRandomTile();
         }
     }
-
+    
     moveUp(arr) {
         let pos;
         for (let col = 0; col < arr.length; col++) {
@@ -155,9 +160,14 @@ class Board {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
+                            // debugger;
                             arr[col][row - 1] = arr[col][row]
-                            pos = { x: row - 1, y: col}
+                            pos = { x: row - 1, y: col }
                             arr[col][row] = new Tile(null, pos);
+                            // // arr[col][row - 1].drawTile(this.ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val);
+                            // // arr[col][row].drawTile();
+                            // this.colorRect();
+                            //trigger redraw of canvas
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
@@ -190,6 +200,7 @@ class Board {
                             arr[col][row + 1] = arr[col][row];
                             pos = { x: row + 1, y: col }
                             arr[col][row] = new Tile(null, pos);
+                            //trigger redraw of canvas
                             row++;
                         } else if (arr[col][row + 1].val == arr[col][row].val &&
                             arr[col][row + 1].mergable && arr[col][row].mergable) {
@@ -219,6 +230,7 @@ class Board {
                             arr[col + 1][row] = arr[col][row];
                             pos = { x: row, y: col };
                             arr[col][row] = new Tile(null, pos)
+                            //trigger redraw of canvas
                             col++;
                         } else if (arr[col + 1][row].val == arr[col][row].val &&
                             arr[col + 1][row].mergable && arr[col][row].mergable) {
@@ -241,7 +253,6 @@ class Board {
 
     moveLeft(arr) {
         let pos;
-        let invalidCounter = 0;
         for (let row = 0; row < arr.length; row++) {
             for (let col = 1; col < arr.length; col++) {
                 if (arr[col][row].val) {
@@ -250,6 +261,7 @@ class Board {
                             arr[col - 1][row] = arr[col][row];
                             pos = { x: row, y: col };
                             arr[col][row] = new Tile(null, pos);
+                            //trigger redraw of canvas
                             col--;
                         } else if (arr[col - 1][row].val == arr[col][row].val && arr[col - 1][row].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;

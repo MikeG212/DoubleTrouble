@@ -32,7 +32,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new Game();
+    game = new Game(colorRect);
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -86,8 +86,6 @@ function drawCells() {
                 CELL_H * eachCol + CELL_GAP,
                 CELL_W - CELL_GAP,
                 CELL_H - CELL_GAP,
-                tile.color,
-                tile.val
             );
         }
     }    
@@ -104,6 +102,7 @@ function drawCanvas() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
+    // debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
     let fontSize = 20;
