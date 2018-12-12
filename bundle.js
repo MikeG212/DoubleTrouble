@@ -181,13 +181,13 @@ function drawCells() {
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
-            colorRect(CELL_W * eachRow + CELL_GAP,
-                      CELL_H * eachCol + CELL_GAP,
-                      CELL_W - CELL_GAP,
-                      CELL_H - CELL_GAP,
-                      tile.color,
-                      tile.val
-                    );
+            tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP,
+                tile.color,
+                tile.val
+            );
         }
     }    
 }
@@ -574,6 +574,20 @@ class Tile {
     makeMergable() {
         this.mergable = true;
     }
+
+    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
+            ctx.fillStyle = fillColor;
+            ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+            let fontSize = 20;
+            ctx.font = `${fontSize}px serif`;
+            ctx.textAlign = "center";
+            ctx.fillStyle = "black";
+            if (val) {
+                ctx.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
+            }
+    }
+
+
 }
 module.exports = Tile;
 

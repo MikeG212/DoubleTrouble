@@ -82,13 +82,13 @@ function drawCells() {
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
-            colorRect(CELL_W * eachRow + CELL_GAP,
-                      CELL_H * eachCol + CELL_GAP,
-                      CELL_W - CELL_GAP,
-                      CELL_H - CELL_GAP,
-                      tile.color,
-                      tile.val
-                    );
+            tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP,
+                tile.color,
+                tile.val
+            );
         }
     }    
 }

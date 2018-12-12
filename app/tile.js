@@ -27,5 +27,19 @@ class Tile {
     makeMergable() {
         this.mergable = true;
     }
+
+    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
+            ctx.fillStyle = fillColor;
+            ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+            let fontSize = 20;
+            ctx.font = `${fontSize}px serif`;
+            ctx.textAlign = "center";
+            ctx.fillStyle = "black";
+            if (val) {
+                ctx.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
+            }
+    }
+
+
 }
 module.exports = Tile;
