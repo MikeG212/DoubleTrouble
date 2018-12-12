@@ -78,18 +78,6 @@ class Board {
          });
     }
     
-    // isValidMove(moveCommand) {
-    //     let prevGrid = deepDup(this.grid); //deep dup this.grid to store previous state
-    //     let newGrid = this.moveComand;
-    //     for (let i = 0; i < prevGrid.length; i++) {
-    //         for (let j = 0; j < prevGrid.length; j++) {
-    //             if prevGrid[]
-    //         }
-    //     }
-
-    //     return true;
-    // }
-
     isValidMove(direction) {
         //debugger;
         let setScore = this.score
@@ -121,7 +109,6 @@ class Board {
                 }
             }
         }
-        // debugger/// why does it sometimes debugger here?
         this.score = setScore;
         return false;
 
@@ -130,8 +117,6 @@ class Board {
     hasValidMoves() {
         // debugger
         return this.getAllEmptyPos().length > 0 || this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
-        // return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching same #'s
-
     }
 
     moveAll(direction) {
@@ -168,10 +153,6 @@ class Board {
                             arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col }
                             arr[col][row] = new Tile(null, pos);
-                            // // arr[col][row - 1].drawTile(this.ctx, topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val);
-                            // // arr[col][row].drawTile();
-                            // this.colorRect();
-                            //trigger redraw of canvas
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
@@ -204,7 +185,6 @@ class Board {
                             arr[col][row + 1] = arr[col][row];
                             pos = { x: row + 1, y: col }
                             arr[col][row] = new Tile(null, pos);
-                            //trigger redraw of canvas
                             row++;
                         } else if (arr[col][row + 1].val == arr[col][row].val &&
                             arr[col][row + 1].mergable && arr[col][row].mergable) {
@@ -234,7 +214,6 @@ class Board {
                             arr[col + 1][row] = arr[col][row];
                             pos = { x: row, y: col };
                             arr[col][row] = new Tile(null, pos)
-                            //trigger redraw of canvas
                             col++;
                         } else if (arr[col + 1][row].val == arr[col][row].val &&
                             arr[col + 1][row].mergable && arr[col][row].mergable) {

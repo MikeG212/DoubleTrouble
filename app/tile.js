@@ -22,6 +22,8 @@ class Tile {
         this.col = pos.col;
         this.row = pos.row;
         this.mergable = false;
+        this.xVelocity = 0;
+        this.yVelocity = 0
     }
 
     makeMergable() {
