@@ -155,6 +155,8 @@ function keyPressed(evt) {
         endGame();
         return;
     }
+    debugger
+    console.log(evt.keycode);
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
@@ -330,28 +332,31 @@ class Board {
             default: 
                 break;
         }
-        if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
-            this.createRandomTile();
-        }
+        // if (prevGrid !== this.grid) { //if previous state is not the same as current state, generate a new tile
+        //     this.createRandomTile();
+        // }
 
         this.createRandomTile();
     }
 
     moveUp() {
-        for (let j = 0; j < this.grid.length; j++) {
-            for (let i = 1; i < this.grid.length; i++) {
-                if (this.grid[j][i].val) {
-                    let row = i;
+        let pos;
+        for (let col = 0; col < this.grid.length; col++) {
+            for (let row = 1; row < this.grid.length; row++) {
+                if (this.grid[col][row].val) {
                     while (row > 0) {
-                        if (!this.grid[j][row - 1].val) {
-                            this.grid[j][row - 1] = this.grid[j][row]
-                            this.grid[j][row] = new Tile(null)
+                        if (!this.grid[col][row - 1].val) {
+                            this.grid[col][row - 1] = this.grid[col][row]
+                            pos = { x: row - 1, y: col}
+                            this.grid[col][row] = new Tile(null, pos)
                             row--;
-                        } else if (this.grid[j][row - 1].val == this.grid[j][row].val) {
-                            let double = this.grid[j][row].val * 2;
-                            this.grid[j][row - 1] = new Tile(double);
+                        } else if (this.grid[col][row - 1].val == this.grid[col][row].val) {
+                            let double = this.grid[col][row].val * 2;
+                            pos = { x: row - 1, y: col}
+                            this.grid[col][row - 1] = new Tile(double, pos);
                             this.score += double;
-                            this.grid[j][row] = new Tile(null);
+                            pos = { x: row, y: col }
+                            this.grid[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     }
@@ -364,20 +369,23 @@ class Board {
     }
 
     moveDown() {
-        for (let j = 0; j < this.grid.length; j++) {
-            for (let i = this.grid.length - 1; i >= 0; i--) {
-                if (this.grid[j][i].val) {
-                    let row = i;
+        let pos;
+        for (let col = 0; col < this.grid.length; col++) {
+            for (let row = this.grid.length - 1; row >= 0; row--) {
+                if (this.grid[col][row].val) {
                     while (row < 3) {
-                        if (!this.grid[j][row + 1].val) {
-                            this.grid[j][row + 1] = this.grid[j][row];
-                            this.grid[j][row] = new Tile(null);
+                        if (!this.grid[col][row + 1].val) {
+                            this.grid[col][row + 1] = this.grid[col][row];
+                            pos = { x: row + 1, y: col }
+                            this.grid[col][row] = new Tile(null, pos);
                             row++;
-                        } else if (this.grid[j][row + 1].val == this.grid[j][row].val) {
-                            let double = this.grid[j][row].val * 2;
-                            this.grid[j][row + 1] = new Tile(double);
+                        } else if (this.grid[col][row + 1].val == this.grid[col][row].val) {
+                            let double = this.grid[col][row].val * 2;
+                            pos = { x: row + 1, y: col }
+                            this.grid[col][row + 1] = new Tile(double, pos);
                             this.score += double;
-                            this.grid[j][row] = new Tile(null);
+                            pos = { x: row, y: col };
+                            this.grid[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     }
@@ -388,20 +396,23 @@ class Board {
     }
 
     moveRight() {
-        for (let j = 0; j < this.grid.length; j++) {
-            for (let i = this.grid.length - 1; i >= 0; i--) {
-                if (this.grid[i][j].val) {
-                    let col = i;
+        let pos;
+        for (let row = 0; row < this.grid.length; row++) {
+            for (let col = this.grid.length - 1; col >= 0; col--) {
+                if (this.grid[col][row].val) {
                     while (col < 3) {
-                        if (!this.grid[col + 1][j].val) {
-                            this.grid[col + 1][j] = this.grid[col][j]
-                            this.grid[col][j] = new Tile(null)
+                        if (!this.grid[col + 1][row].val) {
+                            this.grid[col + 1][row] = this.grid[col][row];
+                            pos = { x: row, y: col };
+                            this.grid[col][row] = new Tile(null, pos)
                             col++;
-                        } else if (this.grid[col + 1][j].val == this.grid[col][j].val) {
-                            let double = this.grid[col][j].val * 2
-                            this.grid[col + 1][j] = new Tile(double);
+                        } else if (this.grid[col + 1][row].val == this.grid[col][row].val) {
+                            let double = this.grid[col][row].val * 2
+                            pos = { x: row, y: col + 1 };
+                            this.grid[col + 1][row] = new Tile(double, pos);
                             this.score += double;
-                            this.grid[col][j] = new Tile(null);
+                            pos = { x: row, y: col };
+                            this.grid[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     }
@@ -413,20 +424,23 @@ class Board {
     }
 
     moveLeft() {
-        for (let j = 0; j < this.grid.length; j++) {
-            for (let i = 1; i < this.grid.length; i++) {
-                if (this.grid[i][j].val) {
-                    let col = i;
+        let pos;
+        for (let row = 0; row < this.grid.length; row++) {
+            for (let col = 1; col < this.grid.length; col++) {
+                if (this.grid[col][row].val) {
                     while (col > 0) {
-                        if (!this.grid[col - 1][j].val) {
-                            this.grid[col - 1][j] = this.grid[col][j]
-                            this.grid[col][j] = new Tile(null)
+                        if (!this.grid[col - 1][row].val) {
+                            this.grid[col - 1][row] = this.grid[col][row]
+                            pos = { x: row, y: col };
+                            this.grid[col][row] = new Tile(null, pos);
                             col--;
-                        } else if (this.grid[col - 1][j].val == this.grid[col][j].val) {
-                            let double = this.grid[col][j].val * 2;
-                            this.grid[col - 1][j] = new Tile(double);
+                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val) {
+                            let double = this.grid[col][row].val * 2;
+                            pos = { x: row, y: col - 1 };
+                            this.grid[col - 1][row] = new Tile(double);
                             this.score += double;
-                            this.grid[col][j] = new Tile(null);
+                            pos = { x: row, y: col };
+                            this.grid[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     }
