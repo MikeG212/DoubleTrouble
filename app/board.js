@@ -86,37 +86,42 @@ class Board {
 
     isValidMove(direction) {
         // debugger;
-        let currentState = this.deepDup(this.grid);
+        let toMutateState = this.deepDup(this.grid);
+        let prevState = this.deepDup(this.grid);
         // debugger;
         switch (direction) {
             case "left":
-                this.moveLeft();
+                this.moveLeft(toMutateState);
                 break;
             case "right":
-                this.moveRight();
+                this.moveRight(toMutateState);
                 break;
             case "up":
-                this.moveUp();
+                this.moveUp(toMutateState);
                 break;
             case "down":
-                this.moveDown();
+                this.moveDown(toMutateState);
                 break;
             default:
                 break;
         }
-        for (let row = 0; row < this.grid.length; row++) {
-            for (let col = 0; col < this.grid.length; col++) {
-                if (this.grid[col][row] !== currentState[col][row]) {
+        for (let row = 0; row < prevState.length; row++) {
+            for (let col = 0; col < prevState.length; col++) {
+                if (prevState[col][row] !== toMutateState[col][row]) {
+                    // debugger;
                     return true;
                 }
             }
         }
+        // debugger/// why does it sometimes debugger here?
         return false;
 
     }
 
     hasValidMoves() {
-        return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching adjacent space
+        // debugger
+        return this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
+        // return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching same #'s
 
     }
 
@@ -125,16 +130,16 @@ class Board {
         if (this.isValidMove(direction)) {
             switch (direction) {
                 case "left":
-                    this.moveLeft();
+                    this.moveLeft(this.grid);
                     break;
                 case "right":
-                    this.moveRight();
+                    this.moveRight(this.grid);
                     break;
                 case "up":
-                    this.moveUp();
+                    this.moveUp(this.grid);
                     break;
                 case "down":
-                    this.moveDown();
+                    this.moveDown(this.grid);
                     break;
                 default: 
                     break;
@@ -143,25 +148,25 @@ class Board {
         }
     }
 
-    moveUp() {
+    moveUp(arr) {
         let pos;
-        for (let col = 0; col < this.grid.length; col++) {
-            for (let row = 1; row < this.grid.length; row++) {
-                if (this.grid[col][row].val) {
+        for (let col = 0; col < arr.length; col++) {
+            for (let row = 1; row < arr.length; row++) {
+                if (arr[col][row].val) {
                     while (row > 0) {
-                        if (!this.grid[col][row - 1].val) {
-                            this.grid[col][row - 1] = this.grid[col][row]
+                        if (!arr[col][row - 1].val) {
+                            arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col}
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             row--;
-                        } else if (this.grid[col][row - 1].val == this.grid[col][row].val &&
-                            this.grid[col][row - 1].mergable && this.grid[col][row].mergable) {
-                            let double = this.grid[col][row].val * 2;
+                        } else if (arr[col][row - 1].val == arr[col][row].val &&
+                            arr[col][row - 1].mergable && arr[col][row].mergable) {
+                            let double = arr[col][row].val * 2;
                             pos = { x: row - 1, y: col}
-                            this.grid[col][row - 1] = new Tile(double, pos);
+                            arr[col][row - 1] = new Tile(double, pos);
                             this.score += double;
                             pos = { x: row, y: col }
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             break;
                         } else 
                             break;
@@ -172,56 +177,57 @@ class Board {
 
         }
 
+        return arr;
     }
 
-    moveDown() {
+    moveDown(arr) {
         let pos;
-        for (let col = 0; col < this.grid.length; col++) {
-            for (let row = this.grid.length - 1; row >= 0; row--) {
-                if (this.grid[col][row].val) {
+        for (let col = 0; col < arr.length; col++) {
+            for (let row = arr.length - 1; row >= 0; row--) {
+                if (arr[col][row].val) {
                     while (row < 3) {
-                        if (!this.grid[col][row + 1].val) {
-                            this.grid[col][row + 1] = this.grid[col][row];
+                        if (!arr[col][row + 1].val) {
+                            arr[col][row + 1] = arr[col][row];
                             pos = { x: row + 1, y: col }
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             row++;
-                        } else if (this.grid[col][row + 1].val == this.grid[col][row].val &&
-                            this.grid[col][row + 1].mergable && this.grid[col][row].mergable) {
-                            let double = this.grid[col][row].val * 2;
+                        } else if (arr[col][row + 1].val == arr[col][row].val &&
+                            arr[col][row + 1].mergable && arr[col][row].mergable) {
+                            let double = arr[col][row].val * 2;
                             pos = { x: row + 1, y: col }
-                            this.grid[col][row + 1] = new Tile(double, pos);
+                            arr[col][row + 1] = new Tile(double, pos);
                             this.score += double;
                             pos = { x: row, y: col };
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     };
                 }
             }
         }
+        return arr;
     }
 
 
-    moveRight() {
+    moveRight(arr) {
         let pos;
-        let invalidCounter = 0;
-        for (let row = 0; row < this.grid.length; row++) {
-            for (let col = this.grid.length - 1; col >= 0; col--) {
-                if (this.grid[col][row].val) {
+        for (let row = 0; row < arr.length; row++) {
+            for (let col = arr.length - 1; col >= 0; col--) {
+                if (arr[col][row].val) {
                     while (col < 3) {
-                        if (!this.grid[col + 1][row].val) {
-                            this.grid[col + 1][row] = this.grid[col][row];
+                        if (!arr[col + 1][row].val) {
+                            arr[col + 1][row] = arr[col][row];
                             pos = { x: row, y: col };
-                            this.grid[col][row] = new Tile(null, pos)
+                            arr[col][row] = new Tile(null, pos)
                             col++;
-                        } else if (this.grid[col + 1][row].val == this.grid[col][row].val &&
-                            this.grid[col + 1][row].mergable && this.grid[col][row].mergable) {
-                            let double = this.grid[col][row].val * 2
+                        } else if (arr[col + 1][row].val == arr[col][row].val &&
+                            arr[col + 1][row].mergable && arr[col][row].mergable) {
+                            let double = arr[col][row].val * 2
                             pos = { x: row, y: col + 1 };
-                            this.grid[col + 1][row] = new Tile(double, pos);
+                            arr[col + 1][row] = new Tile(double, pos);
                             this.score += double;
                             pos = { x: row, y: col };
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             break;
                         } else break
                     };
@@ -229,28 +235,29 @@ class Board {
             }
 
         }
+        return arr;
     }
 
 
-    moveLeft() {
+    moveLeft(arr) {
         let pos;
         let invalidCounter = 0;
-        for (let row = 0; row < this.grid.length; row++) {
-            for (let col = 1; col < this.grid.length; col++) {
-                if (this.grid[col][row].val) {
+        for (let row = 0; row < arr.length; row++) {
+            for (let col = 1; col < arr.length; col++) {
+                if (arr[col][row].val) {
                     while (col > 0) {
-                        if (!this.grid[col - 1][row].val) {
-                            this.grid[col - 1][row] = this.grid[col][row];
+                        if (!arr[col - 1][row].val) {
+                            arr[col - 1][row] = arr[col][row];
                             pos = { x: row, y: col };
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             col--;
-                        } else if (this.grid[col - 1][row].val == this.grid[col][row].val && this.grid[col - 1][row].mergable && this.grid[col][row].mergable) {
-                            let double = this.grid[col][row].val * 2;
+                        } else if (arr[col - 1][row].val == arr[col][row].val && arr[col - 1][row].mergable && arr[col][row].mergable) {
+                            let double = arr[col][row].val * 2;
                             pos = { x: row, y: col - 1 };
-                            this.grid[col - 1][row] = new Tile(double, pos);
+                            arr[col - 1][row] = new Tile(double, pos);
                             this.score += double;
                             pos = { x: row, y: col };
-                            this.grid[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos);
                             break;
                         } else break;
                     }
@@ -258,9 +265,10 @@ class Board {
             }
                 
         }
+
+        return arr;
             
     }
-
 }
 
 
