@@ -116,17 +116,15 @@ class Board {
     }
 
     hasValidMoves() {
-        return isValidMove("left") || isValidMove("right") || isValidMove("up") ||
-            isValidMove("down");
-
+        return this.getAllEmptyPos().length !== 0// if there are no empty spaces and no touching adjacent space
 
     }
 
     moveAll(direction) {
+        // debugger;
         if (this.isValidMove(direction)) {
             switch (direction) {
                 case "left":
-                    // debugger;
                     this.moveLeft();
                     break;
                 case "right":
