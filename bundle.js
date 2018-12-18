@@ -147,9 +147,6 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
-
-
-
 function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
@@ -177,7 +174,7 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
-function drawCells() {
+function drawCells() {// turn these into divs
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
@@ -192,12 +189,22 @@ function drawCells() {
 
 
 function drawAll() {
-    drawCanvas();
-    drawCells();
+    drawGrid();
+    // drawCells();
 }
 
-function drawCanvas() {
+function drawGrid() {
+    debugger
     colorRect(0, 0, canvas.width, canvas.height, 'black');
+    for (let eachRow = 0; eachRow < size; eachRow++) {
+        for (let eachCol = 0; eachCol < size; eachCol++) {
+            colorRect(CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP, 'yellow'
+            );
+        }
+    }  
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
@@ -376,7 +383,9 @@ class Board {
             this.createRandomTile();
         }
     }
-    
+
+    // let squareToMove
+    // let squareReceiving
     moveUp(arr) {
         let pos;
         for (let col = 0; col < arr.length; col++) {
@@ -557,21 +566,22 @@ const TILE_COLORS = {
 
 class Tile {
 
-    constructor(val = null, pos) {
+    constructor(val = null, pos) {// constructor we make them into divs
         this.val = val
         this.color = TILE_COLORS[val];
         this.col = pos.col;
         this.row = pos.row;
         this.mergable = false;
         this.xVelocity = 0;
-        this.yVelocity = 0
+        this.yVelocity = 0;
+
     }
 
     makeMergable() {
         this.mergable = true;
     }
 
-    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) {
+    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
             ctx.fillStyle = this.color;
             ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
             let fontSize = 20;

@@ -141,7 +141,9 @@ class Board {
             this.createRandomTile();
         }
     }
-    
+
+    // let squareToMove
+    // let squareReceiving
     moveUp(arr) {
         let pos;
         for (let col = 0; col < arr.length; col++) {

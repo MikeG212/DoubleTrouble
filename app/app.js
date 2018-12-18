@@ -48,9 +48,6 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
-
-
-
 function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
@@ -78,7 +75,7 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
-function drawCells() {
+function drawCells() {// turn these into divs
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
@@ -93,12 +90,22 @@ function drawCells() {
 
 
 function drawAll() {
-    drawCanvas();
-    drawCells();
+    drawGrid();
+    // drawCells();
 }
 
-function drawCanvas() {
+function drawGrid() {
+    debugger
     colorRect(0, 0, canvas.width, canvas.height, 'black');
+    for (let eachRow = 0; eachRow < size; eachRow++) {
+        for (let eachCol = 0; eachCol < size; eachCol++) {
+            colorRect(CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP, 'yellow'
+            );
+        }
+    }  
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
