@@ -32,7 +32,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new Game(colorRect);
+    game = new Game(colorRect, document.getElementById("tile-container"));
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -91,11 +91,10 @@ function drawCells() {// turn these into divs
 
 function drawAll() {
     drawGrid();
-    // drawCells();
+    drawCells();
 }
 
 function drawGrid() {
-    debugger
     colorRect(0, 0, canvas.width, canvas.height, 'black');
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
@@ -109,7 +108,6 @@ function drawGrid() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    // debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
     let fontSize = 20;

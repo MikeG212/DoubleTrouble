@@ -6,21 +6,15 @@
     <link href="style.css" rel="stylesheet">
     <title>Double Trouble</title>
 </head>
-
 <body>
     <h1> Double Trouble</h1>
     <p id="scoreboard"></p>
-    <div id="size-container">
-        <!-- <p id="size-header">Size : </p> -->
-        <!-- <input id="size" type="number" value="4"> -->
-        <!-- <input id="change-size" type="button" value="Reisze!"> -->
-        <div class="clear"></div>
-    </div>
     <button id="reset-button">Reset</button>
     <p>Use the arrow keys to slide ALL tiles up, down, left, and right. If you slide tiles with the same value into each other,
     they combine. How high will you go??</p>
     <div id="canvas-container">
         <canvas id="doubleTroubleCanvas" width="400" height="400"></canvas>
+        <div id="tile-container" width="400" height="400"></div>
         <script type="application/javascript" src="./bundle.js"></script>
     </div>
 </body>

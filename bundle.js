@@ -131,7 +131,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect);
+    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect, document.getElementById("tile-container"));
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -190,11 +190,10 @@ function drawCells() {// turn these into divs
 
 function drawAll() {
     drawGrid();
-    // drawCells();
+    drawCells();
 }
 
 function drawGrid() {
-    debugger
     colorRect(0, 0, canvas.width, canvas.height, 'black');
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
@@ -208,7 +207,6 @@ function drawGrid() {
 }
 
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    // debugger;
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
     let fontSize = 20;
@@ -243,8 +241,9 @@ function endGame() {
 const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
 
 class Board {
-    constructor(colorRect) {
+    constructor(colorRect, canvas) {
         this.colorRect = colorRect
+        this.canvas = canvas;
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
@@ -256,7 +255,10 @@ class Board {
     blankGrid() {
         let blankArr = new Array(4);
         for (let i = 0; i < blankArr.length; i++) {
-            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }), new Tile(null, { col: i, row: 1 }), new Tile(null, { col: i, row: 2 }), new Tile(null, { col: i, row: 3 }));
+            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }, this.canvas), 
+                new Tile(null, { col: i, row: 1 }, this.canvas),
+                new Tile(null, { col: i, row: 2 }, this.canvas),
+                new Tile(null, { col: i, row: 3 }, this.canvas));
         }
         return blankArr;
     }
@@ -270,7 +272,6 @@ class Board {
                 tile.col = col;
             }
         }
-        debugger;
     }
 
     getAllEmptyPos() {
@@ -289,7 +290,7 @@ class Board {
     createRandomTile() {
         let pos = this.generateRandomAvailablePos();
         let val = Math.random() < .5 ? 2 : 4;
-        let newTile = new Tile(val, pos);
+        let newTile = new Tile(val, pos, this.canvas);
         this.setPos(pos, newTile);
     }
 
@@ -393,19 +394,19 @@ class Board {
                 if (arr[col][row].val) {
                     while (row > 0) {
                         if (!arr[col][row - 1].val) {
-                            debugger;
+                            // debugger;
                             arr[col][row - 1] = arr[col][row]
                             pos = { x: row - 1, y: col }
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
                             pos = { x: row - 1, y: col}
-                            arr[col][row - 1] = new Tile(double, pos);
+                            arr[col][row - 1] = new Tile(double, pos, this.canvas);
                             this.score += double;
                             pos = { x: row, y: col }
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else 
                             break;
@@ -428,16 +429,16 @@ class Board {
                         if (!arr[col][row + 1].val) {
                             arr[col][row + 1] = arr[col][row];
                             pos = { x: row + 1, y: col }
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             row++;
                         } else if (arr[col][row + 1].val == arr[col][row].val &&
                             arr[col][row + 1].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
                             pos = { x: row + 1, y: col }
-                            arr[col][row + 1] = new Tile(double, pos);
+                            arr[col][row + 1] = new Tile(double, pos, this.canvas);
                             this.score += double;
                             pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break;
                     };
@@ -457,16 +458,16 @@ class Board {
                         if (!arr[col + 1][row].val) {
                             arr[col + 1][row] = arr[col][row];
                             pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos)
+                            arr[col][row] = new Tile(null, pos, this.canvas)
                             col++;
                         } else if (arr[col + 1][row].val == arr[col][row].val &&
                             arr[col + 1][row].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2
                             pos = { x: row, y: col + 1 };
-                            arr[col + 1][row] = new Tile(double, pos);
+                            arr[col + 1][row] = new Tile(double, pos, this.canvas);
                             this.score += double;
                             pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break
                     };
@@ -487,16 +488,16 @@ class Board {
                         if (!arr[col - 1][row].val) {
                             arr[col - 1][row] = arr[col][row];
                             pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             //trigger redraw of canvas
                             col--;
                         } else if (arr[col - 1][row].val == arr[col][row].val && arr[col - 1][row].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
                             pos = { x: row, y: col - 1 };
-                            arr[col - 1][row] = new Tile(double, pos);
+                            arr[col - 1][row] = new Tile(double, pos, this.canvas);
                             this.score += double;
                             pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos);
+                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break;
                     }
@@ -527,8 +528,8 @@ module.exports = Board;
 const Board = __webpack_require__(/*! ./board */ "./app/board.js");
 
 class Game{
-    constructor(colorRect) {
-        this.board = new Board(colorRect);
+    constructor(colorRect, canvas) {
+        this.board = new Board(colorRect, canvas);
     }
 
     turn(direction) {
@@ -566,31 +567,45 @@ const TILE_COLORS = {
 
 class Tile {
 
-    constructor(val = null, pos) {// constructor we make them into divs
+    constructor(val = null, pos, containerNode) {// constructor we make them into divs
         this.val = val
-        this.color = TILE_COLORS[val];
+        this.color = TILE_COLORS[this.val];
         this.col = pos.col;
         this.row = pos.row;
         this.mergable = false;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
-
+        let tile = document.createElement('div');
+        tile.innerHTML = val;
+        tile.classList.add("tile");
+        
+        containerNode.appendChild(tile);
+        this.tileNode = tile;
     }
 
     makeMergable() {
         this.mergable = true;
     }
 
+
+
     drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
-            ctx.fillStyle = this.color;
-            ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-            let fontSize = 20;
-            ctx.font = `${fontSize}px serif`;
-            ctx.textAlign = "center";
-            ctx.fillStyle = "black";
-            if (this.val) {
-                ctx.fillText(`${this.val}`, topLeftX + 50, topLeftY + 50);
+            // ctx.fillStyle = this.color;
+            // ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+            // let fontSize = 20;
+            if (!this.val) {
+                this.tileNode.style.opacity = "0";
+            } else {
+                this.tileNode.style.opacity = "1";
+                this.tileNode.style.backgroundColor = this.color;
+
             }
+            this.tileNode.style.left = `${topLeftX}px`;
+            this.tileNode.style.top = `${topLeftY}px`;
+            // ctx.font = `${fontSize}px serif`;
+            // ctx.textAlign = "center";
+            // ctx.fillStyle = "black";
+            // if (this.val) {
+            //     ctx.fillText(`${this.val}`, topLeftX + 50, topLeftY + 50);
+            // }
     }
 
 

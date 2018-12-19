@@ -3,6 +3,31 @@
     text-align: center;
 }
 
+.tile {
+    border-style: solid;
+    box-sizing: border-box;
+    padding: 14px;
+    background-color: red;
+    color: black;
+    display: inline-block;
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 200ms ease-in-out;
+}
+
+#tile-container {
+    margin: auto;
+    display: block;
+    position: relative;
+    width: 400px;
+    height: 400px;
+    bottom: 400px;
+    background-color: #ffffff00;
+}
+
 p {
     font-size: 20px;
 } 
@@ -21,33 +46,11 @@ p {
     border-radius: 10%;
 }
 
-/* #size-container {
-    margin-left: -50px;
-    padding-left: 50%;
-}
-
-#size{
-    width: 50px;
-    margin-left: 10px;
-    border-radius: 10%;
-}
-
-#size-header{
-    float: left;
-    margin-top: 0px;
-    border-radius: 3px;
-      
-}
-
-#change-size{
-    width: 50px;
-    margin-left: 10px;
-    border-radius: 3px;
-} */
-
 #doubleTroubleCanvas {
     background-color: burlywood;
-    margin-left: auto;
+    margin: auto;
+    display: block;
+    position: relative;
 
 }
 

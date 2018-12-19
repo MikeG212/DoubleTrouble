@@ -16,31 +16,45 @@ const TILE_COLORS = {
 
 class Tile {
 
-    constructor(val = null, pos) {// constructor we make them into divs
+    constructor(val = null, pos, containerNode) {// constructor we make them into divs
         this.val = val
-        this.color = TILE_COLORS[val];
+        this.color = TILE_COLORS[this.val];
         this.col = pos.col;
         this.row = pos.row;
         this.mergable = false;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
-
+        let tile = document.createElement('div');
+        tile.innerHTML = val;
+        tile.classList.add("tile");
+        
+        containerNode.appendChild(tile);
+        this.tileNode = tile;
     }
 
     makeMergable() {
         this.mergable = true;
     }
 
+
+
     drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
-            ctx.fillStyle = this.color;
-            ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-            let fontSize = 20;
-            ctx.font = `${fontSize}px serif`;
-            ctx.textAlign = "center";
-            ctx.fillStyle = "black";
-            if (this.val) {
-                ctx.fillText(`${this.val}`, topLeftX + 50, topLeftY + 50);
+            // ctx.fillStyle = this.color;
+            // ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+            // let fontSize = 20;
+            if (!this.val) {
+                this.tileNode.style.opacity = "0";
+            } else {
+                this.tileNode.style.opacity = "1";
+                this.tileNode.style.backgroundColor = this.color;
+
             }
+            this.tileNode.style.left = `${topLeftX}px`;
+            this.tileNode.style.top = `${topLeftY}px`;
+            // ctx.font = `${fontSize}px serif`;
+            // ctx.textAlign = "center";
+            // ctx.fillStyle = "black";
+            // if (this.val) {
+            //     ctx.fillText(`${this.val}`, topLeftX + 50, topLeftY + 50);
+            // }
     }
 
 
