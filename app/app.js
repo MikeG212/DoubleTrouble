@@ -79,11 +79,15 @@ function drawCells() {// turn these into divs
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
-            tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
+            if (tile) {
+                tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
                 CELL_H * eachCol + CELL_GAP,
                 CELL_W - CELL_GAP,
                 CELL_H - CELL_GAP,
-            );
+                );
+                console.log(`${ CELL_W * eachRow + CELL_GAP},
+                    ${CELL_H * eachCol + CELL_GAP}`)
+            }
         }
     }    
 }

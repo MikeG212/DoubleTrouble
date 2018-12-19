@@ -178,11 +178,15 @@ function drawCells() {// turn these into divs
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
-            tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
+            if (tile) {
+                tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
                 CELL_H * eachCol + CELL_GAP,
                 CELL_W - CELL_GAP,
                 CELL_H - CELL_GAP,
-            );
+                );
+                console.log(`${ CELL_W * eachRow + CELL_GAP},
+                    ${CELL_H * eachCol + CELL_GAP}`)
+            }
         }
     }    
 }
@@ -253,14 +257,8 @@ class Board {
     }
 
     blankGrid() {
-        let blankArr = new Array(4);
-        for (let i = 0; i < blankArr.length; i++) {
-            blankArr[i] = new Array(new Tile(null, { col: i, row: 0 }, this.canvas), 
-                new Tile(null, { col: i, row: 1 }, this.canvas),
-                new Tile(null, { col: i, row: 2 }, this.canvas),
-                new Tile(null, { col: i, row: 3 }, this.canvas));
-        }
-        return blankArr;
+        let matrix = new Array(4).fill(null).map(() => new Array(4).fill(null));
+        return matrix;
     }
 
     setAllMergable() {
@@ -278,16 +276,18 @@ class Board {
         let allEmptyPos = []
         for (let j = 0; j < this.grid.length; j++) {
             for (let i = 0; i < this.grid[j].length; i++) {
-                if (!this.grid[i][j].val) {
+                if (!this.grid[i][j]) {
                     allEmptyPos.push([i,j]);
                 }
             }
             
         }
+        debugger
         return allEmptyPos;
     }
 
     createRandomTile() {
+        debugger
         let pos = this.generateRandomAvailablePos();
         let val = Math.random() < .5 ? 2 : 4;
         let newTile = new Tile(val, pos, this.canvas);
@@ -319,16 +319,19 @@ class Board {
                 return el;
             }
          });
+
+        
     }
     
     isValidMove(direction) {
-        //debugger;
+        debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
-        // debugger;
+        debugger;
         switch (direction) {
             case "left":
+                debugger
                 this.moveLeft(toMutateState);
                 break;
             case "right":
@@ -353,6 +356,7 @@ class Board {
             }
         }
         this.score = setScore;
+        debugger
         return false;
 
     }
@@ -363,7 +367,7 @@ class Board {
     }
 
     moveAll(direction) {
-        // debugger;
+        debugger;
         if (this.isValidMove(direction)) {
             switch (direction) {
                 case "left":
@@ -391,22 +395,20 @@ class Board {
         let pos;
         for (let col = 0; col < arr.length; col++) {
             for (let row = 1; row < arr.length; row++) {
-                if (arr[col][row].val) {
+                if (arr[col][row]) {
                     while (row > 0) {
-                        if (!arr[col][row - 1].val) {
+                        if (!arr[col][row - 1]) {
                             // debugger;
                             arr[col][row - 1] = arr[col][row]
-                            pos = { x: row - 1, y: col }
+                            pos = [col, row - 1]
                             arr[col][row] = new Tile(null, pos, this.canvas);
                             row--;
                         } else if (arr[col][row - 1].val == arr[col][row].val &&
                             arr[col][row - 1].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
-                            pos = { x: row - 1, y: col}
+                            pos = [col, row - 1];
                             arr[col][row - 1] = new Tile(double, pos, this.canvas);
                             this.score += double;
-                            pos = { x: row, y: col }
-                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else 
                             break;
@@ -424,21 +426,19 @@ class Board {
         let pos;
         for (let col = 0; col < arr.length; col++) {
             for (let row = arr.length - 1; row >= 0; row--) {
-                if (arr[col][row].val) {
+                if (arr[col][row]) {
                     while (row < 3) {
-                        if (!arr[col][row + 1].val) {
+                        if (!arr[col][row + 1]) {
                             arr[col][row + 1] = arr[col][row];
-                            pos = { x: row + 1, y: col }
+                            pos = [col, row + 1];
                             arr[col][row] = new Tile(null, pos, this.canvas);
                             row++;
                         } else if (arr[col][row + 1].val == arr[col][row].val &&
                             arr[col][row + 1].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
-                            pos = { x: row + 1, y: col }
+                            pos = [col, row + 1]
                             arr[col][row + 1] = new Tile(double, pos, this.canvas);
                             this.score += double;
-                            pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break;
                     };
@@ -453,21 +453,19 @@ class Board {
         let pos;
         for (let row = 0; row < arr.length; row++) {
             for (let col = arr.length - 1; col >= 0; col--) {
-                if (arr[col][row].val) {
+                if (arr[col][row]) {
                     while (col < 3) {
-                        if (!arr[col + 1][row].val) {
+                        if (!arr[col + 1][row]) {
                             arr[col + 1][row] = arr[col][row];
-                            pos = { x: row, y: col };
+                            pos = [col, row];
                             arr[col][row] = new Tile(null, pos, this.canvas)
                             col++;
                         } else if (arr[col + 1][row].val == arr[col][row].val &&
                             arr[col + 1][row].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2
-                            pos = { x: row, y: col + 1 };
+                            pos = [col + 1, row];
                             arr[col + 1][row] = new Tile(double, pos, this.canvas);
                             this.score += double;
-                            pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break
                     };
@@ -480,24 +478,24 @@ class Board {
 
 
     moveLeft(arr) {
+        debugger
         let pos;
         for (let row = 0; row < arr.length; row++) {
             for (let col = 1; col < arr.length; col++) {
-                if (arr[col][row].val) {
+                debugger
+                if (arr[col][row]) {
                     while (col > 0) {
-                        if (!arr[col - 1][row].val) {
+                        if (!arr[col - 1][row]) {
                             arr[col - 1][row] = arr[col][row];
-                            pos = { x: row, y: col };
+                            pos = [col, row];
                             arr[col][row] = new Tile(null, pos, this.canvas);
                             //trigger redraw of canvas
                             col--;
                         } else if (arr[col - 1][row].val == arr[col][row].val && arr[col - 1][row].mergable && arr[col][row].mergable) {
                             let double = arr[col][row].val * 2;
-                            pos = { x: row, y: col - 1 };
+                            pos = [col - 1, row];
                             arr[col - 1][row] = new Tile(double, pos, this.canvas);
                             this.score += double;
-                            pos = { x: row, y: col };
-                            arr[col][row] = new Tile(null, pos, this.canvas);
                             break;
                         } else break;
                     }
@@ -570,8 +568,8 @@ class Tile {
     constructor(val = null, pos, containerNode) {// constructor we make them into divs
         this.val = val
         this.color = TILE_COLORS[this.val];
-        this.col = pos.col;
-        this.row = pos.row;
+        this.col = pos[0];
+        this.row = pos[1];
         this.mergable = false;
         let tile = document.createElement('div');
         tile.innerHTML = val;
@@ -588,24 +586,12 @@ class Tile {
 
 
     drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
-            // ctx.fillStyle = this.color;
-            // ctx.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-            // let fontSize = 20;
-            if (!this.val) {
-                this.tileNode.style.opacity = "0";
-            } else {
-                this.tileNode.style.opacity = "1";
-                this.tileNode.style.backgroundColor = this.color;
-
-            }
+        if (this.val) {
+            this.tileNode.style.opacity = "1";
+            this.tileNode.style.backgroundColor = this.color;
             this.tileNode.style.left = `${topLeftX}px`;
             this.tileNode.style.top = `${topLeftY}px`;
-            // ctx.font = `${fontSize}px serif`;
-            // ctx.textAlign = "center";
-            // ctx.fillStyle = "black";
-            // if (this.val) {
-            //     ctx.fillText(`${this.val}`, topLeftX + 50, topLeftY + 50);
-            // }
+        }
     }
 
 
