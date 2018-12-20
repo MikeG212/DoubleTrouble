@@ -13,7 +13,7 @@ class Board {
     }
 
     blankGrid() {
-        let matrix = new Array(4).fill(null).map(() => new Array(4).fill(null));
+        let matrix = new Array(4).fill(null).map(() => new Array(4).fill(0));
         return matrix;
     }
 
@@ -127,7 +127,7 @@ class Board {
         if (this.isValidMove(direction)) {
             switch (direction) {
                 case "left":
-                    this.moveLeft(this.grid);
+                    this.move(this.grid);
                     break;
                 case "right":
                     this.moveRight(this.grid);
@@ -145,123 +145,23 @@ class Board {
         }
     }
 
-    // let squareToMove
-    // let squareReceiving
-    moveUp(arr) {
-        let pos;
-        for (let col = 0; col < arr.length; col++) {
-            for (let row = 1; row < arr.length; row++) {
-                if (arr[col][row]) {
-                    while (row > 0) {
-                        if (!arr[col][row - 1]) {
-                            // debugger;
-                            arr[col][row - 1] = arr[col][row]
-                            pos = [col, row - 1]
-                            arr[col][row] = new Tile(null, pos, this.canvas);
-                            row--;
-                        } else if (arr[col][row - 1].val == arr[col][row].val &&
-                            arr[col][row - 1].mergable && arr[col][row].mergable) {
-                            let double = arr[col][row].val * 2;
-                            pos = [col, row - 1];
-                            arr[col][row - 1] = new Tile(double, pos, this.canvas);
-                            this.score += double;
-                            break;
-                        } else 
-                            break;
-                    }
-                }
+    shiftGrid
 
-            }
-
-        }
-
-        return arr;
-    }
-
-    moveDown(arr) {
-        let pos;
-        for (let col = 0; col < arr.length; col++) {
-            for (let row = arr.length - 1; row >= 0; row--) {
-                if (arr[col][row]) {
-                    while (row < 3) {
-                        if (!arr[col][row + 1]) {
-                            arr[col][row + 1] = arr[col][row];
-                            pos = [col, row + 1];
-                            arr[col][row] = new Tile(null, pos, this.canvas);
-                            row++;
-                        } else if (arr[col][row + 1].val == arr[col][row].val &&
-                            arr[col][row + 1].mergable && arr[col][row].mergable) {
-                            let double = arr[col][row].val * 2;
-                            pos = [col, row + 1]
-                            arr[col][row + 1] = new Tile(double, pos, this.canvas);
-                            this.score += double;
-                            break;
-                        } else break;
-                    };
-                }
+    arrMove(arr, direction) {
+        arr = arr.filter(Boolean); //filter out all the nulls
+        for (let i = 0; i < arr.length - 1; i++) {
+            if (arr[i] === arr[i + 1]) { //if 0 and 1 are the same, combine at 0, and so on and so forth
+                arr[i] *= 2;
+                arr[i + 1] = 0;
+                arr = arr.slice(0, i + 1).concat(arr.slice(i + 2));
+                this.score += arr[i];
             }
         }
-        return arr;
-    }
 
-
-    moveRight(arr) {
-        let pos;
-        for (let row = 0; row < arr.length; row++) {
-            for (let col = arr.length - 1; col >= 0; col--) {
-                if (arr[col][row]) {
-                    while (col < 3) {
-                        if (!arr[col + 1][row]) {
-                            arr[col + 1][row] = arr[col][row];
-                            pos = [col, row];
-                            arr[col][row] = new Tile(null, pos, this.canvas)
-                            col++;
-                        } else if (arr[col + 1][row].val == arr[col][row].val &&
-                            arr[col + 1][row].mergable && arr[col][row].mergable) {
-                            let double = arr[col][row].val * 2
-                            pos = [col + 1, row];
-                            arr[col + 1][row] = new Tile(double, pos, this.canvas);
-                            this.score += double;
-                            break;
-                        } else break
-                    };
-                }
-            }
-
+        while (arr.length < 4) {//add 0's until arr is length 4
+            arr.push(0);
         }
         return arr;
-    }
-
-
-    moveLeft(arr) {
-        debugger
-        let pos;
-        for (let row = 0; row < arr.length; row++) {
-            for (let col = 1; col < arr.length; col++) {
-                debugger
-                if (arr[col][row]) {
-                    while (col > 0) {
-                        if (!arr[col - 1][row]) {
-                            arr[col - 1][row] = arr[col][row];
-                            pos = [col, row];
-                            arr[col][row] = new Tile(null, pos, this.canvas);
-                            //trigger redraw of canvas
-                            col--;
-                        } else if (arr[col - 1][row].val == arr[col][row].val && arr[col - 1][row].mergable && arr[col][row].mergable) {
-                            let double = arr[col][row].val * 2;
-                            pos = [col - 1, row];
-                            arr[col - 1][row] = new Tile(double, pos, this.canvas);
-                            this.score += double;
-                            break;
-                        } else break;
-                    }
-                }
-            }
-                
-        }
-
-        return arr;
-            
     }
 }
 

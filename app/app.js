@@ -49,6 +49,7 @@ resetButton.addEventListener('click', () => {
 })
 
 function keyPressed(evt) {
+    console.log(evt.keycode)
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
