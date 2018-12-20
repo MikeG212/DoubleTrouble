@@ -165,7 +165,6 @@ resetButton.addEventListener('click', () => {
 })
 
 function keyPressed(evt) {
-    console.log(evt.keycode)
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
@@ -192,22 +191,24 @@ function keyPressed(evt) {
 }
 
 function drawCells() {// turn these into divs
-    console.log(tileContainer);
-    for (let eachRow = 0; eachRow < size; eachRow++) {
-        for (let eachCol = 0; eachCol < size; eachCol++) {
-            let tile = board.grid[eachRow][eachCol];
-            if (tile) {
-                let tileNode = document.createElement('div');
+    for (let eachCol = 0; eachCol < size; eachCol++) {
+        for (let eachRow = 0; eachRow < size; eachRow++) {
+            let tile = board.grid[eachCol][eachRow];
+            if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
+                let tileNode = document.createElement("div");
                 tileNode.innerHTML = tile;
                 tileNode.classList.add("tile");
-                tileNode.id = (`tile{eachCol}{eachRow}`)
+                tileNode.id = `tile${eachCol}-${eachRow}`;
                 tileNode.style.opacity = "1";
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
                 tileNode.style.left = `${eachCol * 100}px`;
                 tileNode.style.top = `${eachRow * 100}px`;
-                
-
                 tileContainer.appendChild(tileNode);
+            // } else if (tile === 0) {
+            //     let tileToDelete = document.getElementById(`tile${eachCol}-${eachRow}`);
+            //     if (tileToDelete) {
+            //         tileToDelete.remove();
+            //     }
             }
         }
     }    
@@ -215,13 +216,21 @@ function drawCells() {// turn these into divs
 
 
 function drawAll() {
-    // clearAll();
+    clearCells();
     drawGrid();
     drawCells();
 }
 
-function clearAll() {
-    //method to remove all divs on empty squares
+function clearCells() {
+    //method to remove all divs on empty squares}
+    for (let eachCol = 0; eachCol < size; eachCol++) {
+        for (let eachRow = 0; eachRow < size; eachRow++) {
+            let tileToDelete = document.getElementById(`tile${eachCol}-${eachRow}`);
+            if (tileToDelete) {
+                tileToDelete.remove();
+            }
+        }
+    }
 }
 
 function drawGrid() {
@@ -288,17 +297,6 @@ class Board {
         return matrix;
     }
 
-    // setAllMergable() {
-    //     for (let row = 0; row < this.grid.length; row++) {
-    //         for (let col = 0;  col < this.grid.length; col++) {
-    //             let tile = this.grid[col][row]
-    //             tile.makeMergable();
-    //             tile.row = row;
-    //             tile.col = col;
-    //         }
-    //     }
-    // }
-
     getAllEmptyPos() {
         let allEmptyPos = []
         for (let j = 0; j < this.grid.length; j++) {
@@ -343,26 +341,29 @@ class Board {
 
         
     }
+
+    areTwoMatricesDifferent(grid1, grid2) {
+        debugger
+        for (let col = 0; col < grid1.length; col++) {
+            for (let row = 0; row < grid1.length; row++) {
+                if (grid1[col][row] !== grid2[col][row]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
     isValidMove(direction) {
         debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
-        this.moveTiles(toMutateState, direction);
-        for (let row = 0; row < prevState.length; row++) {
-            for (let col = 0; col < prevState.length; col++) {
-                if (prevState[col][row] !== toMutateState[col][row]) {
-                    // debugger;
-                    this.score = setScore;
-                    return true;
-                }
-            }
-        }
+        debugger
+        toMutateState = this.moveTiles(toMutateState, direction);
         this.score = setScore;
         debugger
-        return false;
-
+        return this.areTwoMatricesDifferent(toMutateState, prevState);
     }
 
     hasValidMoves() {
@@ -372,7 +373,7 @@ class Board {
 
     moveAll(direction) {
         if (this.isValidMove(direction)) {
-            this.moveTiles(this.grid, direction);
+            this.grid = this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
     }
@@ -403,13 +404,17 @@ class Board {
     }
 
     moveRow(arrRow, direction) {
+        debugger
         arrRow = arrRow.filter(Boolean); //filter out all the nulls
+        if (arrRow.length === 0) {
+            return [0, 0, 0, 0];
+        }
         for (let i = 0; i < arrRow.length - 1; i++) {
             if (arrRow[i] === arrRow[i + 1]) { //if 0 and 1 are the same, combine at 0, and so on and so forth
                 arrRow[i] *= 2;
                 arrRow[i + 1] = 0;
                 arrRow = arrRow.slice(0, i + 1).concat(arrRow.slice(i + 2));
-                this.score += arrRow[i];
+                this.score += arrRow[i]; //increment score
             }
         }
 
