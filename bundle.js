@@ -110,6 +110,22 @@ const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
+const TILE_COLORS = {
+    null: "yellow",
+    2: "#FFFFF0",
+    4: "red",
+    8: "orange",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "green",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00"
+};
+
 let canvas = document.getElementById('doubleTroubleCanvas');
 let canvasContext = canvas.getContext('2d');
 
@@ -175,18 +191,22 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
-function drawCells() {// turn these into divs
+function drawCells(containerNode) {// turn these into divs
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
             if (tile) {
-                tile.drawTile(canvasContext, CELL_W * eachRow + CELL_GAP,
-                CELL_H * eachCol + CELL_GAP,
-                CELL_W - CELL_GAP,
-                CELL_H - CELL_GAP,
-                );
-                console.log(`${ CELL_W * eachRow + CELL_GAP},
-                    ${CELL_H * eachCol + CELL_GAP}`)
+                let tileNode = document.createElement('div');
+                tileNode.innerHTML = val;
+                tileNode.classList.add("tile");
+                tileNode.id.add(`tile{eachCol}{eachRow}`)
+                tileNode.style.opacity = "1";
+                tileNode.style.backgroundColor = TILE_COLORS[tile];
+                tileNode.style.left = `${eachCol * 100}px`;
+                // tileNode.style.top = `${eachRow * 100}px`;
+                
+
+                containerNode.appendChild(tile);
             }
         }
     }    
@@ -194,6 +214,7 @@ function drawCells() {// turn these into divs
 
 
 function drawAll() {
+    // clearAll();
     drawGrid();
     drawCells();
 }
@@ -262,16 +283,16 @@ class Board {
         return matrix;
     }
 
-    setAllMergable() {
-        for (let row = 0; row < this.grid.length; row++) {
-            for (let col = 0;  col < this.grid.length; col++) {
-                let tile = this.grid[col][row]
-                tile.makeMergable();
-                tile.row = row;
-                tile.col = col;
-            }
-        }
-    }
+    // setAllMergable() {
+    //     for (let row = 0; row < this.grid.length; row++) {
+    //         for (let col = 0;  col < this.grid.length; col++) {
+    //             let tile = this.grid[col][row]
+    //             tile.makeMergable();
+    //             tile.row = row;
+    //             tile.col = col;
+    //         }
+    //     }
+    // }
 
     getAllEmptyPos() {
         let allEmptyPos = []
@@ -291,8 +312,7 @@ class Board {
         // debugger
         let pos = this.generateRandomAvailablePos();
         let val = Math.random() < .5 ? 2 : 4;
-        let newTile = new Tile(val, pos, this.canvas);
-        this.setPos(pos, newTile);
+        this.grid[pos[0]][pos[1]] = val;
     }
 
     generateRandomAvailablePos() {
@@ -307,11 +327,6 @@ class Board {
         return this.grid[col][row];
     }
     
-    setPos(pos, tile) {
-        const [col, row] = pos;
-        this.grid[col][row] = tile;
-    }
-
     deepDup(arr) {
         return arr.map(el => {
             if (el instanceof Array) {

@@ -17,16 +17,16 @@ class Board {
         return matrix;
     }
 
-    setAllMergable() {
-        for (let row = 0; row < this.grid.length; row++) {
-            for (let col = 0;  col < this.grid.length; col++) {
-                let tile = this.grid[col][row]
-                tile.makeMergable();
-                tile.row = row;
-                tile.col = col;
-            }
-        }
-    }
+    // setAllMergable() {
+    //     for (let row = 0; row < this.grid.length; row++) {
+    //         for (let col = 0;  col < this.grid.length; col++) {
+    //             let tile = this.grid[col][row]
+    //             tile.makeMergable();
+    //             tile.row = row;
+    //             tile.col = col;
+    //         }
+    //     }
+    // }
 
     getAllEmptyPos() {
         let allEmptyPos = []
@@ -46,8 +46,7 @@ class Board {
         // debugger
         let pos = this.generateRandomAvailablePos();
         let val = Math.random() < .5 ? 2 : 4;
-        let newTile = new Tile(val, pos, this.canvas);
-        this.setPos(pos, newTile);
+        this.grid[pos[0]][pos[1]] = val;
     }
 
     generateRandomAvailablePos() {
@@ -62,11 +61,6 @@ class Board {
         return this.grid[col][row];
     }
     
-    setPos(pos, tile) {
-        const [col, row] = pos;
-        this.grid[col][row] = tile;
-    }
-
     deepDup(arr) {
         return arr.map(el => {
             if (el instanceof Array) {
