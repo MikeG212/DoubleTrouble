@@ -241,9 +241,172 @@ function endGame() {
   !*** ./app/board.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module parse failed: Unexpected token (150:4)\nYou may need an appropriate loader to handle this file type.\n|     shiftGrid\n| \n>     arrMove(arr, direction) {\n|         arr = arr.filter(Boolean); //filter out all the nulls\n|         for (let i = 0; i < arr.length - 1; i++) {");
+const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
+
+class Board {
+    constructor(colorRect, canvas) {
+        this.colorRect = colorRect
+        this.canvas = canvas;
+        this.grid = this.blankGrid();
+        this.gameOver = false;
+        this.createRandomTile(this.grid);
+        this.createRandomTile(this.grid);
+        this.score = 0;
+
+    }
+
+    blankGrid() {
+        let matrix = new Array(4).fill(null).map(() => new Array(4).fill(0));
+        return matrix;
+    }
+
+    setAllMergable() {
+        for (let row = 0; row < this.grid.length; row++) {
+            for (let col = 0;  col < this.grid.length; col++) {
+                let tile = this.grid[col][row]
+                tile.makeMergable();
+                tile.row = row;
+                tile.col = col;
+            }
+        }
+    }
+
+    getAllEmptyPos() {
+        let allEmptyPos = []
+        for (let j = 0; j < this.grid.length; j++) {
+            for (let i = 0; i < this.grid[j].length; i++) {
+                if (!this.grid[i][j]) {
+                    allEmptyPos.push([i,j]);
+                }
+            }
+            
+        }
+        // debugger
+        return allEmptyPos;
+    }
+
+    createRandomTile() {
+        // debugger
+        let pos = this.generateRandomAvailablePos();
+        let val = Math.random() < .5 ? 2 : 4;
+        let newTile = new Tile(val, pos, this.canvas);
+        this.setPos(pos, newTile);
+    }
+
+    generateRandomAvailablePos() {
+        let allEmptyPos = this.getAllEmptyPos();
+        let randomIndex = Math.floor(Math.random() * allEmptyPos.length);
+        // debugger;
+        return allEmptyPos[randomIndex];
+    }
+
+    getPos(pos) {
+        const [col, row] = pos;
+        return this.grid[col][row];
+    }
+    
+    setPos(pos, tile) {
+        const [col, row] = pos;
+        this.grid[col][row] = tile;
+    }
+
+    deepDup(arr) {
+        return arr.map(el => {
+            if (el instanceof Array) {
+                return this.deepDup(el)
+            } else {
+                return el;
+            }
+         });
+
+        
+    }
+    
+    isValidMove(direction) {
+        debugger;
+        let setScore = this.score
+        let toMutateState = this.deepDup(this.grid);
+        let prevState = this.deepDup(this.grid);
+        this.moveTiles(toMutateState, direction);
+        for (let row = 0; row < prevState.length; row++) {
+            for (let col = 0; col < prevState.length; col++) {
+                if (prevState[col][row] !== toMutateState[col][row]) {
+                    // debugger;
+                    this.score = setScore;
+                    return true;
+                }
+            }
+        }
+        this.score = setScore;
+        debugger
+        return false;
+
+    }
+
+    hasValidMoves() {
+        // debugger
+        return this.getAllEmptyPos().length > 0 || this.isValidMove("left") || this.isValidMove("right") || this.isValidMove("up") || this.isValidMove("down");
+    }
+
+    moveAll(direction) {
+        debugger;
+        if (this.isValidMove(direction)) {
+            this.moveTiles(this.grid, direction);
+            this.createRandomTile();
+        }
+    }
+
+    transpose(arr) { 
+        return arr[0].map((col, i) => arr.map(row => row[i]));
+    }
+
+    moveTiles(arr, direction) {
+        debugger
+        if (direction === "left" || direction === "right") {
+            arr = this.transpose(arr);
+        }
+        console.log(arr)
+        debugger
+
+        for (let col = 0; col < arr.length; col++) {
+            if (direction === "up" || direction === "left") {
+                arr[col] = this.moveRow(arr[col]);
+            } else {
+                arr[col] = this.moveRow(arr[col]).reverse;
+            }
+        }
+
+        if (direction === "left" || direction === "right") {
+            arr = this.transpose(arr);
+        }
+
+        return arr;
+    }
+
+    moveRow(arrRow, direction) {
+        arrRow = arrRow.filter(Boolean); //filter out all the nulls
+        for (let i = 0; i < arrRow.length - 1; i++) {
+            if (arrRow[i] === arrRow[i + 1]) { //if 0 and 1 are the same, combine at 0, and so on and so forth
+                arrRow[i] *= 2;
+                arrRow[i + 1] = 0;
+                arrRow = arrRow.slice(0, i + 1).concat(arrRow.slice(i + 2));
+                this.score += arrRow[i];
+            }
+        }
+
+        while (arrRow.length < 4) {//add 0's until arrRow is length 4
+            arrRow.push(0);
+        }
+        return arrRow;
+    }
+}
+
+
+module.exports = Board;
+
+
 
 /***/ }),
 
@@ -268,6 +431,66 @@ class Game{
     }
 }
 module.exports = Game;
+
+/***/ }),
+
+/***/ "./app/tile.js":
+/*!*********************!*\
+  !*** ./app/tile.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const TILE_COLORS = {
+    null: "yellow",
+    2: "#FFFFF0",
+    4: "red",
+    8: "orange",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "green",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00",
+};
+
+class Tile {
+
+    constructor(val = null, pos, containerNode) {// constructor we make them into divs
+        this.val = val
+        this.color = TILE_COLORS[this.val];
+        this.col = pos[0];
+        this.row = pos[1];
+        this.mergable = false;
+        let tile = document.createElement('div');
+        tile.innerHTML = val;
+        tile.classList.add("tile");
+        
+        containerNode.appendChild(tile);
+        this.tileNode = tile;
+    }
+
+    makeMergable() {
+        this.mergable = true;
+    }
+
+
+
+    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
+        if (this.val) {
+            this.tileNode.style.opacity = "1";
+            this.tileNode.style.backgroundColor = this.color;
+            this.tileNode.style.left = `${topLeftX}px`;
+            this.tileNode.style.top = `${topLeftY}px`;
+        }
+    }
+
+
+}
+module.exports = Tile;
 
 /***/ })
 

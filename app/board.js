@@ -38,12 +38,12 @@ class Board {
             }
             
         }
-        debugger
+        // debugger
         return allEmptyPos;
     }
 
     createRandomTile() {
-        debugger
+        // debugger
         let pos = this.generateRandomAvailablePos();
         let val = Math.random() < .5 ? 2 : 4;
         let newTile = new Tile(val, pos, this.canvas);
@@ -84,24 +84,7 @@ class Board {
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
-        debugger;
-        switch (direction) {
-            case "left":
-                debugger
-                this.moveLeft(toMutateState);
-                break;
-            case "right":
-                this.moveRight(toMutateState);
-                break;
-            case "up":
-                this.moveUp(toMutateState);
-                break;
-            case "down":
-                this.moveDown(toMutateState);
-                break;
-            default:
-                break;
-        }
+        this.moveTiles(toMutateState, direction);
         for (let row = 0; row < prevState.length; row++) {
             for (let col = 0; col < prevState.length; col++) {
                 if (prevState[col][row] !== toMutateState[col][row]) {
@@ -125,43 +108,53 @@ class Board {
     moveAll(direction) {
         debugger;
         if (this.isValidMove(direction)) {
-            switch (direction) {
-                case "left":
-                    this.move(this.grid);
-                    break;
-                case "right":
-                    this.moveRight(this.grid);
-                    break;
-                case "up":
-                    this.moveUp(this.grid);
-                    break;
-                case "down":
-                    this.moveDown(this.grid);
-                    break;
-                default: 
-                    break;
-            }
+            this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
     }
 
-    shiftGrid
+    transpose(arr) { 
+        return arr[0].map((col, i) => arr.map(row => row[i]));
+    }
 
-    arrMove(arr, direction) {
-        arr = arr.filter(Boolean); //filter out all the nulls
-        for (let i = 0; i < arr.length - 1; i++) {
-            if (arr[i] === arr[i + 1]) { //if 0 and 1 are the same, combine at 0, and so on and so forth
-                arr[i] *= 2;
-                arr[i + 1] = 0;
-                arr = arr.slice(0, i + 1).concat(arr.slice(i + 2));
-                this.score += arr[i];
+    moveTiles(arr, direction) {
+        debugger
+        if (direction === "left" || direction === "right") {
+            arr = this.transpose(arr);
+        }
+        console.log(arr)
+        debugger
+
+        for (let col = 0; col < arr.length; col++) {
+            if (direction === "up" || direction === "left") {
+                arr[col] = this.moveRow(arr[col]);
+            } else {
+                arr[col] = this.moveRow(arr[col]).reverse;
             }
         }
 
-        while (arr.length < 4) {//add 0's until arr is length 4
-            arr.push(0);
+        if (direction === "left" || direction === "right") {
+            arr = this.transpose(arr);
         }
+
         return arr;
+    }
+
+    moveRow(arrRow, direction) {
+        arrRow = arrRow.filter(Boolean); //filter out all the nulls
+        for (let i = 0; i < arrRow.length - 1; i++) {
+            if (arrRow[i] === arrRow[i + 1]) { //if 0 and 1 are the same, combine at 0, and so on and so forth
+                arrRow[i] *= 2;
+                arrRow[i + 1] = 0;
+                arrRow = arrRow.slice(0, i + 1).concat(arrRow.slice(i + 2));
+                this.score += arrRow[i];
+            }
+        }
+
+        while (arrRow.length < 4) {//add 0's until arrRow is length 4
+            arrRow.push(0);
+        }
+        return arrRow;
     }
 }
 
