@@ -131,6 +131,7 @@ let canvasContext = canvas.getContext('2d');
 
 let sizeInput = document.getElementById("size");
 let changeSize = document.getElementById("change-size");
+let tileContainer = document.getElementById("tile-container");
 let scoreboard = document.getElementById("scoreboard");
 
 let size = 4;
@@ -147,7 +148,7 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect, document.getElementById("tile-container"));
+    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect, tileContainer);
     board = game.board;
     scoreboard.innerHTML = `Score: 0`;
     drawAll();
@@ -182,7 +183,6 @@ function keyPressed(evt) {
             break;
     }
     scoreboard.innerHTML = `Score: ${board.score}`
-    board.setAllMergable();
     drawAll();
     if (!board.hasValidMoves()) {
         endGame();
@@ -191,22 +191,23 @@ function keyPressed(evt) {
     evt.preventDefault();
 }
 
-function drawCells(containerNode) {// turn these into divs
+function drawCells() {// turn these into divs
+    console.log(tileContainer);
     for (let eachRow = 0; eachRow < size; eachRow++) {
         for (let eachCol = 0; eachCol < size; eachCol++) {
             let tile = board.grid[eachRow][eachCol];
             if (tile) {
                 let tileNode = document.createElement('div');
-                tileNode.innerHTML = val;
+                tileNode.innerHTML = tile;
                 tileNode.classList.add("tile");
-                tileNode.id.add(`tile{eachCol}{eachRow}`)
+                tileNode.id = (`tile{eachCol}{eachRow}`)
                 tileNode.style.opacity = "1";
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
                 tileNode.style.left = `${eachCol * 100}px`;
-                // tileNode.style.top = `${eachRow * 100}px`;
+                tileNode.style.top = `${eachRow * 100}px`;
                 
 
-                containerNode.appendChild(tile);
+                tileContainer.appendChild(tileNode);
             }
         }
     }    
@@ -217,6 +218,10 @@ function drawAll() {
     // clearAll();
     drawGrid();
     drawCells();
+}
+
+function clearAll() {
+    //method to remove all divs on empty squares
 }
 
 function drawGrid() {
@@ -366,30 +371,21 @@ class Board {
     }
 
     moveAll(direction) {
-        debugger;
         if (this.isValidMove(direction)) {
             this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
     }
-
-    transpose(arr) { 
-        return arr[0].map((col, i) => arr.map(row => row[i]));
-    }
-
     moveTiles(arr, direction) {
-        debugger
         if (direction === "left" || direction === "right") {
             arr = this.transpose(arr);
         }
-        console.log(arr)
-        debugger
 
         for (let col = 0; col < arr.length; col++) {
             if (direction === "up" || direction === "left") {
                 arr[col] = this.moveRow(arr[col]);
-            } else {
-                arr[col] = this.moveRow(arr[col]).reverse;
+            } else if (direction === "down" || direction === "right") {
+                arr[col] = this.moveRow(arr[col].reverse()).reverse();
             }
         }
 
@@ -398,6 +394,12 @@ class Board {
         }
 
         return arr;
+    }
+
+
+    transpose(arr) {
+        let transposed = arr[0].map((col, i) => arr.map(row => row[i]));
+        return transposed;
     }
 
     moveRow(arrRow, direction) {
@@ -488,9 +490,9 @@ class Tile {
         this.tileNode = tile;
     }
 
-    makeMergable() {
-        this.mergable = true;
-    }
+    // makeMergable() {
+    //     this.mergable = true;
+    // }
 
 
 

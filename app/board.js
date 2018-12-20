@@ -100,30 +100,21 @@ class Board {
     }
 
     moveAll(direction) {
-        debugger;
         if (this.isValidMove(direction)) {
             this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
     }
-
-    transpose(arr) { 
-        return arr[0].map((col, i) => arr.map(row => row[i]));
-    }
-
     moveTiles(arr, direction) {
-        debugger
         if (direction === "left" || direction === "right") {
             arr = this.transpose(arr);
         }
-        console.log(arr)
-        debugger
 
         for (let col = 0; col < arr.length; col++) {
             if (direction === "up" || direction === "left") {
                 arr[col] = this.moveRow(arr[col]);
-            } else {
-                arr[col] = this.moveRow(arr[col]).reverse;
+            } else if (direction === "down" || direction === "right") {
+                arr[col] = this.moveRow(arr[col].reverse()).reverse();
             }
         }
 
@@ -132,6 +123,12 @@ class Board {
         }
 
         return arr;
+    }
+
+
+    transpose(arr) {
+        let transposed = arr[0].map((col, i) => arr.map(row => row[i]));
+        return transposed;
     }
 
     moveRow(arrRow, direction) {

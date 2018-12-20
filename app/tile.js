@@ -30,9 +30,9 @@ class Tile {
         this.tileNode = tile;
     }
 
-    makeMergable() {
-        this.mergable = true;
-    }
+    // makeMergable() {
+    //     this.mergable = true;
+    // }
 
 
 
