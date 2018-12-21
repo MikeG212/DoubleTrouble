@@ -222,7 +222,7 @@ function drawCells() {// turn these into divs
 
 function animateMove(direction="right") {
     game.turn("right");
-    debugger
+    // debugger
     let tilesCollection = document.getElementsByClassName("tile");
     let tilesArray = Array.from(tilesCollection);
     tilesArray.forEach(tile => {
