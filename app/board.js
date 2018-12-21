@@ -1,3 +1,5 @@
+import Tile from "./tile";
+
 class Board {
     constructor(colorRect, canvas) {
         this.colorRect = colorRect

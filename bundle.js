@@ -175,19 +175,24 @@ function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
+            animateMove('left');
             break;
         case KEY_RIGHT:
             game.turn('right');
+            animateMove("right");
             break;
         case KEY_UP:
             game.turn('up');
+            animateMove("up");
             break;
         case KEY_DOWN:
             game.turn('down');
+            animateMove('down');
             break;
         default:
             break;
     }
+    ani
     scoreboard.innerHTML = `Score: ${board.score}`
     drawAll();
     if (!board.hasValidMoves()) {
@@ -212,7 +217,6 @@ function drawCells() {// turn these into divs
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
                 tileContainer.appendChild(tileNode);
                 tileNode.style.left = `${eachCol * 100}px`;
-                // tileNode.style.left = `0px`;
                 tileNode.style.top = `${eachRow * 100}px`;
                 counter++;     
             }
@@ -221,7 +225,6 @@ function drawCells() {// turn these into divs
 }
 
 function animateMove(direction="right") {
-    game.turn("right");
     // debugger
     let tilesCollection = document.getElementsByClassName("tile");
     let tilesArray = Array.from(tilesCollection);
@@ -229,22 +232,34 @@ function animateMove(direction="right") {
         let leftVal = parseInt(tile.style.left, 10);
         let topVal = parseInt(tile.style.top, 10);
         let valToChange;
-        let delta = 300 - leftVal;
+        let endPos;
+        
         
         if (direction === "up" || direction === "down") {
             valToChange = topVal;
+            // endPos = parseInt(tile.endPos.style.top, 10);
+            endPos = topVal + 200;
         } else if(direction === "left" || direction === "right") {
             valToChange = leftVal;
+            // endPos = parseInt(tile.endPos.style.left, 10);
+            endPos = leftVal + 200;
         }
+
+        let delta = endPos - valToChange;
 
             let id = setInterval(frame, 1);
             function frame() {
-                if (leftVal === 300) {
+                if (valToChange === endPos) {
                     clearInterval(id);
                 } else {
-                    leftVal += delta/100;
-                    // tile.style.top = pos + "px";
-                    tile.style.left = leftVal + "px";
+                    valToChange += delta / 100;
+                    if (direction === "left" || direction === "right") {
+                        tile.style.left = valToChange + "px";
+                    } else if (direction === "up" || direction === "down") {
+                        tile.style.top = valToChange + "px";
+                    }
+                    
+
                 }
             }
         });
@@ -296,6 +311,7 @@ function endGame() {
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     canvasContext.fillText(`YOU SUCK`, 200, 200);
+    canvas.style.zIndex = "200";
 }
 
 
@@ -306,8 +322,14 @@ function endGame() {
 /*!**********************!*\
   !*** ./app/board.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _tile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tile */ "./app/tile.js");
+/* harmony import */ var _tile__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tile__WEBPACK_IMPORTED_MODULE_0__);
+
 
 class Board {
     constructor(colorRect, canvas) {
@@ -458,6 +480,7 @@ class Board {
 module.exports = Board;
 
 
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
 
 /***/ }),
 
@@ -482,6 +505,101 @@ class Game{
     }
 }
 module.exports = Game;
+
+/***/ }),
+
+/***/ "./app/tile.js":
+/*!*********************!*\
+  !*** ./app/tile.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const TILE_COLORS = {
+    null: "yellow",
+    2: "#FFFFF0",
+    4: "red",
+    8: "orange",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "green",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00",
+};
+
+class Tile {
+
+    constructor(val = null, pos, containerNode) {// constructor we make them into divs
+        this.val = val
+        this.color = TILE_COLORS[this.val];
+        this.y = pos[0];
+        this.x = pos[1];
+        this.mergable = false;
+        let tile = document.createElement('div');
+        tile.innerHTML = val;
+        tile.classList.add("tile");
+
+        containerNode.appendChild(tile);
+        this.tileNode = tile;
+    }
+
+    calcDelta() {
+        
+    }
+
+
+
+    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
+        if (this.val) {
+            this.tileNode.style.opacity = "1";
+            this.tileNode.style.backgroundColor = this.color;
+            this.tileNode.style.left = `${topLeftX}px`;
+            this.tileNode.style.top = `${topLeftY}px`;
+        }
+    }
+
+
+}
+module.exports = Tile;
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/harmony-module.js":
+/*!*******************************************!*\
+  !*** (webpack)/buildin/harmony-module.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function(originalModule) {
+	if (!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
 
 /***/ })
 

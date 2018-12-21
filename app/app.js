@@ -76,19 +76,24 @@ function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
+            animateMove('left');
             break;
         case KEY_RIGHT:
             game.turn('right');
+            animateMove("right");
             break;
         case KEY_UP:
             game.turn('up');
+            animateMove("up");
             break;
         case KEY_DOWN:
             game.turn('down');
+            animateMove('down');
             break;
         default:
             break;
     }
+    ani
     scoreboard.innerHTML = `Score: ${board.score}`
     drawAll();
     if (!board.hasValidMoves()) {
@@ -113,7 +118,6 @@ function drawCells() {// turn these into divs
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
                 tileContainer.appendChild(tileNode);
                 tileNode.style.left = `${eachCol * 100}px`;
-                // tileNode.style.left = `0px`;
                 tileNode.style.top = `${eachRow * 100}px`;
                 counter++;     
             }
@@ -122,7 +126,6 @@ function drawCells() {// turn these into divs
 }
 
 function animateMove(direction="right") {
-    game.turn("right");
     // debugger
     let tilesCollection = document.getElementsByClassName("tile");
     let tilesArray = Array.from(tilesCollection);
@@ -130,22 +133,34 @@ function animateMove(direction="right") {
         let leftVal = parseInt(tile.style.left, 10);
         let topVal = parseInt(tile.style.top, 10);
         let valToChange;
-        let delta = 300 - leftVal;
+        let endPos;
+        
         
         if (direction === "up" || direction === "down") {
             valToChange = topVal;
+            // endPos = parseInt(tile.endPos.style.top, 10);
+            endPos = topVal + 200;
         } else if(direction === "left" || direction === "right") {
             valToChange = leftVal;
+            // endPos = parseInt(tile.endPos.style.left, 10);
+            endPos = leftVal + 200;
         }
+
+        let delta = endPos - valToChange;
 
             let id = setInterval(frame, 1);
             function frame() {
-                if (leftVal === 300) {
+                if (valToChange === endPos) {
                     clearInterval(id);
                 } else {
-                    leftVal += delta/100;
-                    // tile.style.top = pos + "px";
-                    tile.style.left = leftVal + "px";
+                    valToChange += delta / 100;
+                    if (direction === "left" || direction === "right") {
+                        tile.style.left = valToChange + "px";
+                    } else if (direction === "up" || direction === "down") {
+                        tile.style.top = valToChange + "px";
+                    }
+                    
+
                 }
             }
         });
@@ -197,5 +212,6 @@ function endGame() {
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "black";
     canvasContext.fillText(`YOU SUCK`, 200, 200);
+    canvas.style.zIndex = "200";
 }
 
