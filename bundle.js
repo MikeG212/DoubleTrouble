@@ -164,6 +164,13 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
+let animateButton = document.getElementById("animate-button");
+animateButton.addEventListener("click", () => {
+    animateMove();
+});
+
+onclick = "animateMove()"
+
 function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
@@ -191,27 +198,54 @@ function keyPressed(evt) {
 }
 
 function drawCells() {// turn these into divs
+    let counter = 0;
     for (let eachCol = 0; eachCol < size; eachCol++) {
         for (let eachRow = 0; eachRow < size; eachRow++) {
             let tile = board.grid[eachCol][eachRow];
             if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
                 let tileNode = document.createElement("div");
                 tileNode.innerHTML = tile;
-                tileNode.classList.add("tile");
+                tileNode.classList.add(`tile`);
+                tileNode.classList.add(`tile${counter}`);
                 tileNode.id = `tile${eachCol}-${eachRow}`;
                 tileNode.style.opacity = "1";
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
-                tileNode.style.left = `${eachCol * 100}px`;
-                tileNode.style.top = `${eachRow * 100}px`;
                 tileContainer.appendChild(tileNode);
-            // } else if (tile === 0) {
-            //     let tileToDelete = document.getElementById(`tile${eachCol}-${eachRow}`);
-            //     if (tileToDelete) {
-            //         tileToDelete.remove();
-            //     }
+                tileNode.style.left = `${eachCol * 100}px`;
+                // tileNode.style.left = `0px`;
+                tileNode.style.top = `${eachRow * 100}px`;
+                counter++;     
             }
         }
     }    
+}
+
+function animateMove(direction) {
+    debugger
+    // let tiles = document.getElementsByClassName("tile");
+    let tiles = document.getElementsByClassName("tile");
+    let tile = tiles[0];
+
+    let leftVal = parseInt(tile.style.left, 10);
+    let topVal = parseInt(tile.style.top, 10);
+    let valToChange;
+
+    // if (direction === "up" || direction === "down") {
+    //     valToChange = topVal;
+    // } else if(direction === "left" || direction === "right") {
+    //     valToChange = leftVal;
+    // }
+
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (leftVal == 300) {
+            clearInterval(id);
+        } else {
+            leftVal++;
+            // tile.style.top = pos + "px";
+            tile.style.left = leftVal + "px";
+        }
+    }
 }
 
 
@@ -249,13 +283,6 @@ function drawGrid() {
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = 20;
-    canvasContext.font = `${fontSize}px serif`;
-    canvasContext.textAlign = "center";
-    canvasContext.fillStyle = "black";
-    if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
-    }
 }
 
 function endGame() {
@@ -276,9 +303,7 @@ function endGame() {
   !*** ./app/board.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Tile = __webpack_require__(/*! ./tile */ "./app/tile.js");
+/***/ (function(module, exports) {
 
 class Board {
     constructor(colorRect, canvas) {
@@ -448,71 +473,11 @@ class Game{
 
     turn(direction) {
         if (!this.board.gameOver) {
-            this.board.moveAll(direction)
+            this.board.moveAll(direction);
         }
     }
 }
 module.exports = Game;
-
-/***/ }),
-
-/***/ "./app/tile.js":
-/*!*********************!*\
-  !*** ./app/tile.js ***!
-  \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-const TILE_COLORS = {
-    null: "yellow",
-    2: "#FFFFF0",
-    4: "red",
-    8: "orange",
-    16: "#6F00FF",
-    32: "#003CFF",
-    64: "#00EBFF",
-    128: "green",
-    256: "#00FF22",
-    512: "#7CFF00",
-    1024: "#F7FF00",
-    2048: "#FF7C00",
-    4096: "#FF2F00",
-};
-
-class Tile {
-
-    constructor(val = null, pos, containerNode) {// constructor we make them into divs
-        this.val = val
-        this.color = TILE_COLORS[this.val];
-        this.col = pos[0];
-        this.row = pos[1];
-        this.mergable = false;
-        let tile = document.createElement('div');
-        tile.innerHTML = val;
-        tile.classList.add("tile");
-        
-        containerNode.appendChild(tile);
-        this.tileNode = tile;
-    }
-
-    // makeMergable() {
-    //     this.mergable = true;
-    // }
-
-
-
-    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
-        if (this.val) {
-            this.tileNode.style.opacity = "1";
-            this.tileNode.style.backgroundColor = this.color;
-            this.tileNode.style.left = `${topLeftX}px`;
-            this.tileNode.style.top = `${topLeftY}px`;
-        }
-    }
-
-
-}
-module.exports = Tile;
 
 /***/ })
 

@@ -65,6 +65,13 @@ resetButton.addEventListener('click', () => {
     startGame();
 })
 
+let animateButton = document.getElementById("animate-button");
+animateButton.addEventListener("click", () => {
+    animateMove();
+});
+
+onclick = "animateMove()"
+
 function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
@@ -92,27 +99,54 @@ function keyPressed(evt) {
 }
 
 function drawCells() {// turn these into divs
+    let counter = 0;
     for (let eachCol = 0; eachCol < size; eachCol++) {
         for (let eachRow = 0; eachRow < size; eachRow++) {
             let tile = board.grid[eachCol][eachRow];
             if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
                 let tileNode = document.createElement("div");
                 tileNode.innerHTML = tile;
-                tileNode.classList.add("tile");
+                tileNode.classList.add(`tile`);
+                tileNode.classList.add(`tile${counter}`);
                 tileNode.id = `tile${eachCol}-${eachRow}`;
                 tileNode.style.opacity = "1";
                 tileNode.style.backgroundColor = TILE_COLORS[tile];
-                tileNode.style.left = `${eachCol * 100}px`;
-                tileNode.style.top = `${eachRow * 100}px`;
                 tileContainer.appendChild(tileNode);
-            // } else if (tile === 0) {
-            //     let tileToDelete = document.getElementById(`tile${eachCol}-${eachRow}`);
-            //     if (tileToDelete) {
-            //         tileToDelete.remove();
-            //     }
+                tileNode.style.left = `${eachCol * 100}px`;
+                // tileNode.style.left = `0px`;
+                tileNode.style.top = `${eachRow * 100}px`;
+                counter++;     
             }
         }
     }    
+}
+
+function animateMove(direction) {
+    debugger
+    // let tiles = document.getElementsByClassName("tile");
+    let tiles = document.getElementsByClassName("tile");
+    let tile = tiles[0];
+
+    let leftVal = parseInt(tile.style.left, 10);
+    let topVal = parseInt(tile.style.top, 10);
+    let valToChange;
+
+    // if (direction === "up" || direction === "down") {
+    //     valToChange = topVal;
+    // } else if(direction === "left" || direction === "right") {
+    //     valToChange = leftVal;
+    // }
+
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (leftVal == 300) {
+            clearInterval(id);
+        } else {
+            leftVal++;
+            // tile.style.top = pos + "px";
+            tile.style.left = leftVal + "px";
+        }
+    }
 }
 
 
@@ -150,13 +184,6 @@ function drawGrid() {
 function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
-    let fontSize = 20;
-    canvasContext.font = `${fontSize}px serif`;
-    canvasContext.textAlign = "center";
-    canvasContext.fillStyle = "black";
-    if (val) {
-        canvasContext.fillText(`${val}`, topLeftX + 50, topLeftY + 50);
-    }
 }
 
 function endGame() {

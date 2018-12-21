@@ -7,7 +7,7 @@ class Game{
 
     turn(direction) {
         if (!this.board.gameOver) {
-            this.board.moveAll(direction)
+            this.board.moveAll(direction);
         }
     }
 }

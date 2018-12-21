@@ -13,9 +13,11 @@
     height: 100px;
     width: 100px;
     position: absolute;
-    /* top: 0; */
-    /* left: 0; */
-    transition: all 200ms ease-in-out;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s linear;
+    /* transition: 1s ease-in-out; */
 }
 
 #tile-container {

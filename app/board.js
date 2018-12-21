@@ -1,5 +1,3 @@
-const Tile = require("./tile");
-
 class Board {
     constructor(colorRect, canvas) {
         this.colorRect = colorRect
