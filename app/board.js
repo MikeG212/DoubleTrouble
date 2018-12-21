@@ -61,7 +61,7 @@ class Board {
     }
 
     areTwoMatricesDifferent(grid1, grid2) {
-        debugger
+        // debugger
         for (let col = 0; col < grid1.length; col++) {
             for (let row = 0; row < grid1.length; row++) {
                 if (grid1[col][row] !== grid2[col][row]) {
@@ -73,14 +73,14 @@ class Board {
     }
     
     isValidMove(direction) {
-        debugger;
+        // debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
-        debugger
+        // debugger
         toMutateState = this.moveTiles(toMutateState, direction);
         this.score = setScore;
-        debugger
+        // debugger
         return this.areTwoMatricesDifferent(toMutateState, prevState);
     }
 
@@ -122,7 +122,7 @@ class Board {
     }
 
     moveRow(arrRow, direction) {
-        debugger
+        // debugger
         arrRow = arrRow.filter(Boolean); //filter out all the nulls
         if (arrRow.length === 0) {
             return [0, 0, 0, 0];

@@ -220,33 +220,37 @@ function drawCells() {// turn these into divs
     }    
 }
 
-function animateMove(direction) {
+function animateMove(direction="right") {
+    game.turn("right");
     debugger
-    // let tiles = document.getElementsByClassName("tile");
-    let tiles = document.getElementsByClassName("tile");
-    let tile = tiles[0];
-
-    let leftVal = parseInt(tile.style.left, 10);
-    let topVal = parseInt(tile.style.top, 10);
-    let valToChange;
-
-    // if (direction === "up" || direction === "down") {
-    //     valToChange = topVal;
-    // } else if(direction === "left" || direction === "right") {
-    //     valToChange = leftVal;
-    // }
-
-    let id = setInterval(frame, 5);
-    function frame() {
-        if (leftVal == 300) {
-            clearInterval(id);
-        } else {
-            leftVal++;
-            // tile.style.top = pos + "px";
-            tile.style.left = leftVal + "px";
+    let tilesCollection = document.getElementsByClassName("tile");
+    let tilesArray = Array.from(tilesCollection);
+    tilesArray.forEach(tile => {
+        let leftVal = parseInt(tile.style.left, 10);
+        let topVal = parseInt(tile.style.top, 10);
+        let valToChange;
+        let delta = 300 - leftVal;
+        
+        if (direction === "up" || direction === "down") {
+            valToChange = topVal;
+        } else if(direction === "left" || direction === "right") {
+            valToChange = leftVal;
         }
-    }
+
+            let id = setInterval(frame, 1);
+            function frame() {
+                if (leftVal === 300) {
+                    clearInterval(id);
+                } else {
+                    leftVal += delta/100;
+                    // tile.style.top = pos + "px";
+                    tile.style.left = leftVal + "px";
+                }
+            }
+        });
+        
 }
+
 
 
 function drawAll() {
@@ -368,7 +372,7 @@ class Board {
     }
 
     areTwoMatricesDifferent(grid1, grid2) {
-        debugger
+        // debugger
         for (let col = 0; col < grid1.length; col++) {
             for (let row = 0; row < grid1.length; row++) {
                 if (grid1[col][row] !== grid2[col][row]) {
@@ -380,14 +384,14 @@ class Board {
     }
     
     isValidMove(direction) {
-        debugger;
+        // debugger;
         let setScore = this.score
         let toMutateState = this.deepDup(this.grid);
         let prevState = this.deepDup(this.grid);
-        debugger
+        // debugger
         toMutateState = this.moveTiles(toMutateState, direction);
         this.score = setScore;
-        debugger
+        // debugger
         return this.areTwoMatricesDifferent(toMutateState, prevState);
     }
 
@@ -429,7 +433,7 @@ class Board {
     }
 
     moveRow(arrRow, direction) {
-        debugger
+        // debugger
         arrRow = arrRow.filter(Boolean); //filter out all the nulls
         if (arrRow.length === 0) {
             return [0, 0, 0, 0];

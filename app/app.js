@@ -121,33 +121,37 @@ function drawCells() {// turn these into divs
     }    
 }
 
-function animateMove(direction) {
+function animateMove(direction="right") {
+    game.turn("right");
     debugger
-    // let tiles = document.getElementsByClassName("tile");
-    let tiles = document.getElementsByClassName("tile");
-    let tile = tiles[0];
-
-    let leftVal = parseInt(tile.style.left, 10);
-    let topVal = parseInt(tile.style.top, 10);
-    let valToChange;
-
-    // if (direction === "up" || direction === "down") {
-    //     valToChange = topVal;
-    // } else if(direction === "left" || direction === "right") {
-    //     valToChange = leftVal;
-    // }
-
-    let id = setInterval(frame, 5);
-    function frame() {
-        if (leftVal == 300) {
-            clearInterval(id);
-        } else {
-            leftVal++;
-            // tile.style.top = pos + "px";
-            tile.style.left = leftVal + "px";
+    let tilesCollection = document.getElementsByClassName("tile");
+    let tilesArray = Array.from(tilesCollection);
+    tilesArray.forEach(tile => {
+        let leftVal = parseInt(tile.style.left, 10);
+        let topVal = parseInt(tile.style.top, 10);
+        let valToChange;
+        let delta = 300 - leftVal;
+        
+        if (direction === "up" || direction === "down") {
+            valToChange = topVal;
+        } else if(direction === "left" || direction === "right") {
+            valToChange = leftVal;
         }
-    }
+
+            let id = setInterval(frame, 1);
+            function frame() {
+                if (leftVal === 300) {
+                    clearInterval(id);
+                } else {
+                    leftVal += delta/100;
+                    // tile.style.top = pos + "px";
+                    tile.style.left = leftVal + "px";
+                }
+            }
+        });
+        
 }
+
 
 
 function drawAll() {
