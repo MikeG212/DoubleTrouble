@@ -99,47 +99,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_game__WEBPACK_IMPORTED_MODULE_0__);
 
 
-const CELL_W = 100;
-const CELL_H = 100;
-const CELL_ROWS = 4;
-const CELL_COLS = 4;
-const CELL_GAP = 2
-
 const KEY_LEFT = 37;
 const KEY_UP = 38;
 const KEY_RIGHT = 39;
 const KEY_DOWN = 40;
 
-const TILE_COLORS = {
-    null: "yellow",
-    2: "#FFFFF0",
-    4: "red",
-    8: "orange",
-    16: "#6F00FF",
-    32: "#003CFF",
-    64: "#00EBFF",
-    128: "green",
-    256: "#00FF22",
-    512: "#7CFF00",
-    1024: "#F7FF00",
-    2048: "#FF7C00",
-    4096: "#FF2F00"
-};
-
 let canvas = document.getElementById('doubleTroubleCanvas');
 let canvasContext = canvas.getContext('2d');
 
-let sizeInput = document.getElementById("size");
-let changeSize = document.getElementById("change-size");
 let tileContainer = document.getElementById("tile-container");
 let scoreboard = document.getElementById("scoreboard");
-
-let size = 4;
-let width = canvas.width / size - 5;
-
-let cells = [];
-let fontSize;
-let gameOver = false;
 
 let game;
 let board;
@@ -148,10 +117,10 @@ startGame();
 
 function startGame() {
     // debugger;
-    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(colorRect, tileContainer);
+    game = new _game__WEBPACK_IMPORTED_MODULE_0___default.a(tileContainer);
     board = game.board;
+    board.drawAll();
     scoreboard.innerHTML = `Score: 0`;
-    drawAll();
     canvas.style.opacity = "1";
 }
 
@@ -169,139 +138,30 @@ animateButton.addEventListener("click", () => {
     animateMove();
 });
 
-onclick = "animateMove()"
-
 function keyPressed(evt) {
     switch (evt.keyCode) {
         case KEY_LEFT:
             game.turn('left');
-            animateMove('left');
             break;
         case KEY_RIGHT:
             game.turn('right');
-            animateMove("right");
             break;
         case KEY_UP:
             game.turn('up');
-            animateMove("up");
             break;
         case KEY_DOWN:
             game.turn('down');
-            animateMove('down');
             break;
         default:
             break;
     }
-    ani
     scoreboard.innerHTML = `Score: ${board.score}`
-    drawAll();
+    board.drawAll();
     if (!board.hasValidMoves()) {
         endGame();
         return;
     }
     evt.preventDefault();
-}
-
-function drawCells() {// turn these into divs
-    let counter = 0;
-    for (let eachCol = 0; eachCol < size; eachCol++) {
-        for (let eachRow = 0; eachRow < size; eachRow++) {
-            let tile = board.grid[eachCol][eachRow];
-            if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
-                let tileNode = document.createElement("div");
-                tileNode.innerHTML = tile;
-                tileNode.classList.add(`tile`);
-                tileNode.classList.add(`tile${counter}`);
-                tileNode.id = `tile${eachCol}-${eachRow}`;
-                tileNode.style.opacity = "1";
-                tileNode.style.backgroundColor = TILE_COLORS[tile];
-                tileContainer.appendChild(tileNode);
-                tileNode.style.left = `${eachCol * 100}px`;
-                tileNode.style.top = `${eachRow * 100}px`;
-                counter++;     
-            }
-        }
-    }    
-}
-
-function animateMove(direction="right") {
-    // debugger
-    let tilesCollection = document.getElementsByClassName("tile");
-    let tilesArray = Array.from(tilesCollection);
-    tilesArray.forEach(tile => {
-        let leftVal = parseInt(tile.style.left, 10);
-        let topVal = parseInt(tile.style.top, 10);
-        let valToChange;
-        let endPos;
-        
-        
-        if (direction === "up" || direction === "down") {
-            valToChange = topVal;
-            // endPos = parseInt(tile.endPos.style.top, 10);
-            endPos = topVal + 200;
-        } else if(direction === "left" || direction === "right") {
-            valToChange = leftVal;
-            // endPos = parseInt(tile.endPos.style.left, 10);
-            endPos = leftVal + 200;
-        }
-
-        let delta = endPos - valToChange;
-
-            let id = setInterval(frame, 1);
-            function frame() {
-                if (valToChange === endPos) {
-                    clearInterval(id);
-                } else {
-                    valToChange += delta / 100;
-                    if (direction === "left" || direction === "right") {
-                        tile.style.left = valToChange + "px";
-                    } else if (direction === "up" || direction === "down") {
-                        tile.style.top = valToChange + "px";
-                    }
-                    
-
-                }
-            }
-        });
-        
-}
-
-
-
-function drawAll() {
-    clearCells();
-    drawGrid();
-    drawCells();
-}
-
-function clearCells() {
-    //method to remove all divs on empty squares}
-    for (let eachCol = 0; eachCol < size; eachCol++) {
-        for (let eachRow = 0; eachRow < size; eachRow++) {
-            let tileToDelete = document.getElementById(`tile${eachCol}-${eachRow}`);
-            if (tileToDelete) {
-                tileToDelete.remove();
-            }
-        }
-    }
-}
-
-function drawGrid() {
-    colorRect(0, 0, canvas.width, canvas.height, 'black');
-    for (let eachRow = 0; eachRow < size; eachRow++) {
-        for (let eachCol = 0; eachCol < size; eachCol++) {
-            colorRect(CELL_W * eachRow + CELL_GAP,
-                CELL_H * eachCol + CELL_GAP,
-                CELL_W - CELL_GAP,
-                CELL_H - CELL_GAP, 'yellow'
-            );
-        }
-    }  
-}
-
-function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, val) {
-    canvasContext.fillStyle = fillColor;
-    canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
 }
 
 function endGame() {
@@ -322,25 +182,51 @@ function endGame() {
 /*!**********************!*\
   !*** ./app/board.js ***!
   \**********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _tile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tile */ "./app/tile.js");
-/* harmony import */ var _tile__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tile__WEBPACK_IMPORTED_MODULE_0__);
+// import Tile from "./tile";
 
+const CELL_W = 100;
+const CELL_H = 100;
+const CELL_ROWS = 4;
+const CELL_COLS = 4;
+const CELL_GAP = 2;
+const SIZE = 4;
+const CANVAS_HEIGHT = 400;
+const CANVAS_WIDTH = 400;
+
+const WIDTH = 95;
+
+let canvas = document.getElementById("doubleTroubleCanvas");
+let canvasContext = canvas.getContext("2d");
+
+const TILE_COLORS = {
+    null: "yellow",
+    2: "#FFFFF0",
+    4: "red",
+    8: "orange",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "green",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00"
+};
 
 class Board {
-    constructor(colorRect, canvas) {
-        this.colorRect = colorRect
-        this.canvas = canvas;
+    constructor(tileContainer) {
+        this.tileContainer = tileContainer;
+
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
         this.createRandomTile(this.grid);
         this.score = 0;
-
+        this.drawAll = this.drawAll.bind(this);
     }
 
     blankGrid() {
@@ -424,6 +310,7 @@ class Board {
 
     moveAll(direction) {
         if (this.isValidMove(direction)) {
+            // this.animateMove(direction);
             this.grid = this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
@@ -474,13 +361,113 @@ class Board {
         }
         return arrRow;
     }
+
+drawCells() {// turn these into divs
+    for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+        for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+            let tile = this.grid[eachCol][eachRow];
+            if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
+                let tileNode = document.createElement("div");
+                tileNode.innerHTML = tile;
+                tileNode.classList.add(`tile`);
+                tileNode.style.left = `${eachCol * 100}px`;
+                tileNode.style.top = `${eachRow * 100}px`;
+                tileNode.classList.add(`tile${eachCol}-${eachRow}`);
+                tileNode.style.opacity = "1";
+                tileNode.style.backgroundColor = TILE_COLORS[tile];
+                this.tileContainer.appendChild(tileNode);
+
+            }
+        }
+    }
+}
+
+clearCells() {
+    //method to remove all divs on empty squares}
+    debugger
+    for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+        for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+            let tileToDelete = document.getElementsByClassName(`tile${eachCol}-${eachRow}`)[0];
+            if (tileToDelete) {
+                tileToDelete.remove();
+            }
+        }
+    }
+}
+
+drawGrid() {
+    this.colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, 'black');
+    for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+        for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+            this.colorRect(CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP, 'yellow'
+            );
+        }
+    }
+}
+
+colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
+    canvasContext.fillStyle = fillColor;
+    canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
 }
 
 
-module.exports = Board;
+animateMove(direction = "right") {
+    debugger
+    let tilesCollection = document.getElementsByClassName("tile");
+    let tilesArray = Array.from(tilesCollection);
+    tilesArray.forEach(tile => {
+        let leftVal = parseInt(tile.style.left, 10);
+        let topVal = parseInt(tile.style.top, 10);
+        let valToChange;
+        let endPos;
 
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+        if (direction === "up" || direction === "down") {
+            valToChange = topVal;
+            // endPos = parseInt(tile.endPos.style.top, 10);
+            endPos = topVal + 100;
+        } else if (direction === "left" || direction === "right") {
+            valToChange = leftVal;
+            // endPos = parseInt(tile.endPos.style.left, 10);
+            endPos = leftVal + 100;
+        }
+
+        let delta = endPos - valToChange;
+
+        let id = setInterval(frame, 1);
+        function frame() {
+            debugger
+            if (valToChange === endPos) {
+                clearInterval(id);
+            } else {
+                valToChange += delta / 100;
+                if (direction === "left" || direction === "right") {
+                    tile.style.left = valToChange + "px";
+                } else if (direction === "up" || direction === "down") {
+                    tile.style.top = valToChange + "px";
+                }
+
+
+            }
+        }
+    });
+    // setTimeout(this.drawAll, 1);
+
+    }
+
+    drawAll() {
+        this.clearCells();
+        this.drawGrid();
+        this.drawCells();
+    }
+}
+    module.exports = Board;
+
+
+
 
 /***/ }),
 
@@ -494,8 +481,8 @@ module.exports = Board;
 const Board = __webpack_require__(/*! ./board */ "./app/board.js");
 
 class Game{
-    constructor(colorRect, canvas) {
-        this.board = new Board(colorRect, canvas);
+    constructor(tileContainer) {
+        this.board = new Board(tileContainer);
     }
 
     turn(direction) {
@@ -505,101 +492,6 @@ class Game{
     }
 }
 module.exports = Game;
-
-/***/ }),
-
-/***/ "./app/tile.js":
-/*!*********************!*\
-  !*** ./app/tile.js ***!
-  \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-const TILE_COLORS = {
-    null: "yellow",
-    2: "#FFFFF0",
-    4: "red",
-    8: "orange",
-    16: "#6F00FF",
-    32: "#003CFF",
-    64: "#00EBFF",
-    128: "green",
-    256: "#00FF22",
-    512: "#7CFF00",
-    1024: "#F7FF00",
-    2048: "#FF7C00",
-    4096: "#FF2F00",
-};
-
-class Tile {
-
-    constructor(val = null, pos, containerNode) {// constructor we make them into divs
-        this.val = val
-        this.color = TILE_COLORS[this.val];
-        this.y = pos[0];
-        this.x = pos[1];
-        this.mergable = false;
-        let tile = document.createElement('div');
-        tile.innerHTML = val;
-        tile.classList.add("tile");
-
-        containerNode.appendChild(tile);
-        this.tileNode = tile;
-    }
-
-    calcDelta() {
-        
-    }
-
-
-
-    drawTile(ctx, topLeftX, topLeftY, boxWidth, boxHeight) { //update properties on the divs (transform, translate background color)
-        if (this.val) {
-            this.tileNode.style.opacity = "1";
-            this.tileNode.style.backgroundColor = this.color;
-            this.tileNode.style.left = `${topLeftX}px`;
-            this.tileNode.style.top = `${topLeftY}px`;
-        }
-    }
-
-
-}
-module.exports = Tile;
-
-/***/ }),
-
-/***/ "./node_modules/webpack/buildin/harmony-module.js":
-/*!*******************************************!*\
-  !*** (webpack)/buildin/harmony-module.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function(originalModule) {
-	if (!originalModule.webpackPolyfill) {
-		var module = Object.create(originalModule);
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		Object.defineProperty(module, "exports", {
-			enumerable: true
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
 
 /***/ })
 

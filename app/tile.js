@@ -14,24 +14,21 @@ const TILE_COLORS = {
     4096: "#FF2F00",
 };
 
-class Tile {
-
-    constructor(val = null, pos, containerNode) {// constructor we make them into divs
+class Tile (val, pos) {// constructor we make them into divs
         this.val = val
-        this.color = TILE_COLORS[this.val];
         this.y = pos[0];
         this.x = pos[1];
-        this.mergable = false;
+        this.delta = 0;
+
         let tile = document.createElement('div');
         tile.innerHTML = val;
         tile.classList.add("tile");
 
         containerNode.appendChild(tile);
         this.tileNode = tile;
-    }
 
     calcDelta() {
-        
+
     }
 
 

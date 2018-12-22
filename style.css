@@ -13,11 +13,8 @@
     height: 100px;
     width: 100px;
     position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transition: opacity 1s linear;
-    /* transition: 1s ease-in-out; */
+    transform: translate(0px, 0px);
+    transition: 100ms ease-in-out;
 }
 
 #tile-container {
@@ -58,4 +55,88 @@ p {
 
 #canvasContainer {
     width: 200px;
+}
+
+.tile0-0 {
+    left: 0px;
+    top: 0px;
+}
+
+.tile0-1 {
+    left: 0px;
+    top: 100px;
+    
+}
+
+.tile0-2 {
+    left: 0px;
+    top: 200px;
+}
+
+.tile0-3 {
+    left: 0px;
+    top: 300px;
+}
+
+.tile1-0 {
+    left: 100px;
+    top: 0px;
+}
+
+.tile1-1 {
+    left: 100px;
+    top: 100px;
+    
+}
+
+.tile1-2 {
+    left: 100px;
+    top: 200px;
+}
+
+.tile1-3 {
+    left: 100px;
+    top: 300px;
+}
+
+.tile2-0 {
+    left: 200px;
+    top: 0px;
+}
+
+.tile2-1 {
+    left: 200px;
+    top: 100px;
+    
+}
+
+.tile2-2 {
+    left: 200px;
+    top: 200px;
+}
+
+.tile2-3 {
+    left: 200px;
+    top: 300px;
+}
+
+.tile3-0 {
+    left: 300px;
+    top: 0px;
+}
+
+.tile3-1 {
+    left: 300px;
+    top: 100px;
+    
+}
+
+.tile3-2 {
+    left: 300px;
+    top: 200px;
+}
+
+.tile3-3 {
+    left: 300px;
+    top: 300px;
 }

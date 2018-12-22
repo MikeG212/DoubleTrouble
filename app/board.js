@@ -1,15 +1,45 @@
-import Tile from "./tile";
+// import Tile from "./tile";
+
+const CELL_W = 100;
+const CELL_H = 100;
+const CELL_ROWS = 4;
+const CELL_COLS = 4;
+const CELL_GAP = 2;
+const SIZE = 4;
+const CANVAS_HEIGHT = 400;
+const CANVAS_WIDTH = 400;
+
+const WIDTH = 95;
+
+let canvas = document.getElementById("doubleTroubleCanvas");
+let canvasContext = canvas.getContext("2d");
+
+const TILE_COLORS = {
+    null: "yellow",
+    2: "#FFFFF0",
+    4: "red",
+    8: "orange",
+    16: "#6F00FF",
+    32: "#003CFF",
+    64: "#00EBFF",
+    128: "green",
+    256: "#00FF22",
+    512: "#7CFF00",
+    1024: "#F7FF00",
+    2048: "#FF7C00",
+    4096: "#FF2F00"
+};
 
 class Board {
-    constructor(colorRect, canvas) {
-        this.colorRect = colorRect
-        this.canvas = canvas;
+    constructor(tileContainer) {
+        this.tileContainer = tileContainer;
+
         this.grid = this.blankGrid();
         this.gameOver = false;
         this.createRandomTile(this.grid);
         this.createRandomTile(this.grid);
         this.score = 0;
-
+        this.drawAll = this.drawAll.bind(this);
     }
 
     blankGrid() {
@@ -93,6 +123,7 @@ class Board {
 
     moveAll(direction) {
         if (this.isValidMove(direction)) {
+            // this.animateMove(direction);
             this.grid = this.moveTiles(this.grid, direction);
             this.createRandomTile();
         }
@@ -143,8 +174,109 @@ class Board {
         }
         return arrRow;
     }
+
+drawCells() {// turn these into divs
+    for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+        for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+            let tile = this.grid[eachCol][eachRow];
+            if (tile && !document.getElementById(`tile${eachCol}-${eachRow}`)) {
+                let tileNode = document.createElement("div");
+                tileNode.innerHTML = tile;
+                tileNode.classList.add(`tile`);
+                tileNode.style.left = `${eachCol * 100}px`;
+                tileNode.style.top = `${eachRow * 100}px`;
+                tileNode.classList.add(`tile${eachCol}-${eachRow}`);
+                tileNode.style.opacity = "1";
+                tileNode.style.backgroundColor = TILE_COLORS[tile];
+                this.tileContainer.appendChild(tileNode);
+
+            }
+        }
+    }
+}
+
+clearCells() {
+    //method to remove all divs on empty squares}
+    debugger
+    for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+        for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+            let tileToDelete = document.getElementsByClassName(`tile${eachCol}-${eachRow}`)[0];
+            if (tileToDelete) {
+                tileToDelete.remove();
+            }
+        }
+    }
+}
+
+drawGrid() {
+    this.colorRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, 'black');
+    for (let eachRow = 0; eachRow < SIZE; eachRow++) {
+        for (let eachCol = 0; eachCol < SIZE; eachCol++) {
+            this.colorRect(CELL_W * eachRow + CELL_GAP,
+                CELL_H * eachCol + CELL_GAP,
+                CELL_W - CELL_GAP,
+                CELL_H - CELL_GAP, 'yellow'
+            );
+        }
+    }
+}
+
+colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
+    canvasContext.fillStyle = fillColor;
+    canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
 }
 
 
-module.exports = Board;
+animateMove(direction = "right") {
+    debugger
+    let tilesCollection = document.getElementsByClassName("tile");
+    let tilesArray = Array.from(tilesCollection);
+    tilesArray.forEach(tile => {
+        let leftVal = parseInt(tile.style.left, 10);
+        let topVal = parseInt(tile.style.top, 10);
+        let valToChange;
+        let endPos;
+
+
+        if (direction === "up" || direction === "down") {
+            valToChange = topVal;
+            // endPos = parseInt(tile.endPos.style.top, 10);
+            endPos = topVal + 100;
+        } else if (direction === "left" || direction === "right") {
+            valToChange = leftVal;
+            // endPos = parseInt(tile.endPos.style.left, 10);
+            endPos = leftVal + 100;
+        }
+
+        let delta = endPos - valToChange;
+
+        let id = setInterval(frame, 1);
+        function frame() {
+            debugger
+            if (valToChange === endPos) {
+                clearInterval(id);
+            } else {
+                valToChange += delta / 100;
+                if (direction === "left" || direction === "right") {
+                    tile.style.left = valToChange + "px";
+                } else if (direction === "up" || direction === "down") {
+                    tile.style.top = valToChange + "px";
+                }
+
+
+            }
+        }
+    });
+    // setTimeout(this.drawAll, 1);
+
+    }
+
+    drawAll() {
+        this.clearCells();
+        this.drawGrid();
+        this.drawCells();
+    }
+}
+    module.exports = Board;
+
 

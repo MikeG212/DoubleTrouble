@@ -1,8 +1,8 @@
 const Board = require("./board");
 
 class Game{
-    constructor(colorRect, canvas) {
-        this.board = new Board(colorRect, canvas);
+    constructor(tileContainer) {
+        this.board = new Board(tileContainer);
     }
 
     turn(direction) {
